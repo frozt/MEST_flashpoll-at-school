@@ -16,7 +16,7 @@ public class PageCreation {
 	 public String question (entities.Question q, int totalQuestion)
 	    {
 		 String question="<div data-role=\"page\" id=\"question"+q.getNumber()+"\"> "
-	                +" <div data-role=\"header\"><h1>FlashPoll</h1></div>"
+	                +" <div data-role=\"header\"><h1>MEST</h1></div>"
 	                + " <div data-role=\"content\"> ";
 	        
 	        switch(q.getType())
@@ -136,7 +136,7 @@ public class PageCreation {
 	    }
 	    private String finalPage ()
 	    {
-	        String content=" <div data-role=\"page\" id=\"final\"><div data-role=\"header\"><h1>FlashPoll</h1></div> "
+	        String content=" <div data-role=\"page\" id=\"final\"><div data-role=\"header\"><h1>MEST</h1></div> "
 	                +" <div data-role=\"content\"><h1>Thank you for participation</h1>This is the end of survey."
 	                + " <br>If you want to change anything you can go back with Previous button or you can finish the survey with Submit button. "
 	                +"<fieldset class=\"ui-grid-a\"><div class=\"ui-block-a\"><input type=\"button\" value=\"Previous\" data-theme=\"b\" "
