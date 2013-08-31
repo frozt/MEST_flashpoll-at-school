@@ -1,5 +1,6 @@
 package business;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,11 +9,29 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
+
 import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
 import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
+import java.lang.*;
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.*;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import java.io.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+
 
 import entities.Question;
+import entities.Poll;
 
 public class Main {
 
@@ -28,70 +47,17 @@ public class Main {
 //	    
 	    em.close();
 	}
-	public static void create(EntityManager em)
-	{   
-	    em.getTransaction().begin();
-	    
-	    Question q1=new Question();
-        q1.setText("What is you gender?");
-        q1.setType("single");
-        q1.setNumber(1);
-        ArrayList<String> q1_opts = new ArrayList<String>();
-        q1_opts.add("Male");
-        q1_opts.add("Female");
-        q1.setPoll_id(1);
-        q1.setOptions(q1_opts);
-        
-        Question q2=new Question();
-        q2.setText("What are your hobbies?");
-        q2.setType("multiple");
-        q2.setNumber(2);
-        ArrayList<String> q2_opts = new ArrayList<String>();
-        q2_opts.add("Cinema");
-        q2_opts.add("Football");
-        q2_opts.add("Basketball");
-        q2.setPoll_id(1);
-        q2.setOptions(q2_opts);
-        
-        Question q3=new Question();
-        q3.setText("How important is education for you?");
-        q3.setType("slide");
-        q3.setNumber(3);
-        ArrayList<String> q3_opts = new ArrayList<String>();
-        q3_opts.add("1");
-        q3_opts.add("10");
-        q3.setPoll_id(1);
-        q3.setOptions(q3_opts);
-        
-        Question q4=new Question();
-        q4.setText("What is you opinion for the poll?");
-        q4.setType("text");
-        q4.setNumber(4);
-        q4.setPoll_id(1);
-	    
-	    em.persist(q1);
-	    em.persist(q2);
-	    em.persist(q3);
-	    em.persist(q4);
-	    em.getTransaction().commit();
-
-	    
-	}
-	public static Question load(EntityManager em)
-	{
-		System.out.println("Load started");
-		Question q = em.find(entities.Question.class, (long)4);
-		System.out.println("Question found");
-		for(String opt: q.getOptions() )
-			System.out.println(opt);
-		return q;
-	}
 	public static List<Question> getQuestions(EntityManager em, long poll_id)
 	{
 		Query query = em.createQuery("select q from Question q where q.poll_id = :poll_id");
-		query.setParameter("poll_id", (long)1);
+		query.setParameter("poll_id", poll_id);
 		return query.getResultList();
 		
+	}
+	public static Long getLastPollId (EntityManager em)
+	{
+		Query query = em.createQuery("select MAX(s.id) from Poll s");
+		return (long)query.getResultList().get(0);
 	}
 	public static boolean checkEmail (EntityManager em, String email)
 	{
@@ -150,5 +116,129 @@ public class Main {
 		}
 		return true;
 	}
+	public static long insertPoll(EntityManager em, String pollXml)
+	{
+		if(validateXml(pollXml))
+		{
+			parseXml(em, pollXml);
+		}
+		else 
+			return -1;
+		return getLastPollId(em);
+	}
+	private static boolean validateXml(String pollXml) {
+		Source schemaFile = new StreamSource(new File("schema.xsd"));
+        //Source xmlFile = new StreamSource(new File("../src/poll.xml"));
+		//System.out.println(String.class.getResource("/schema.xsd").getPath());
+		//Source schemaFile = new StreamSource(new File(String.class.getResource("/schema.xsd").getPath()));
+        StringReader reader = new StringReader(pollXml);
+        Source xmlFile = new javax.xml.transform.stream.StreamSource(reader);
+        
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        
+
+        try{
+            Schema schema = schemaFactory.newSchema(schemaFile);
+            Validator validator = schema.newValidator();
+            validator.validate(xmlFile);
+            System.out.println(xmlFile.getSystemId() + " is valid");
+        }
+        catch (SAXException e) 
+        {
+            System.out.println(xmlFile.getSystemId() + " is NT valid");
+            System.out.println("Reason: " + e.getLocalizedMessage());
+            return false;
+        }
+        catch (Exception e) 
+        {
+            System.out.println(xmlFile.getSystemId() + " is NOT valid");
+            System.out.println("Reason: " + e.getLocalizedMessage());
+            return false;
+        }
+        return true;
+	}
+	private static void parseXml(EntityManager em, String pollXml)
+	{
+		try {
+
+	        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	        Document doc = dBuilder.parse(new InputSource(new StringReader(pollXml)));
+	     
+	        doc.getDocumentElement().normalize();
+	     
+	        System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+	     
+	        NodeList nList = doc.getElementsByTagName("question");
+
+	        Poll poll = new Poll();
+            poll.setStatus(true);
+            em.getTransaction().begin();
+    		System.out.println("transaction started");
+    		try {
+    			em.persist(poll);
+    			em.getTransaction().commit();
+    		}catch (Exception e){
+    			System.out.println(e.toString());
+    		}
+	     
+	        for (int temp = 0; temp < nList.getLength(); temp++) {
+	     
+	            Node nNode = nList.item(temp);
+	     
+	            System.out.println("\nCurrent Element :" + nNode.getNodeName());
+	     
+	            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+	     
+	                Element eElement = (Element) nNode;
+	                
+	        		Question question = new Question();
+	                System.out.println("Text : " + eElement.getElementsByTagName("text").item(0).getTextContent());
+	                question.setText(eElement.getElementsByTagName("text").item(0).getTextContent());
+	                System.out.println("Type : " + eElement.getElementsByTagName("type").item(0).getTextContent());
+	                question.setType(eElement.getElementsByTagName("type").item(0).getTextContent());
+	                System.out.println("Number : " + eElement.getElementsByTagName("number").item(0).getTextContent());
+	                question.setNumber(Integer.parseInt(eElement.getElementsByTagName("number").item(0).getTextContent()));
+	                if(eElement.getElementsByTagName("options").getLength() > 0)
+	                {
+	                	ArrayList<String> options = new ArrayList<String>();
+	                	for(int i=0; i< eElement.getElementsByTagName("options").getLength(); i++)
+	                	{
+	                		System.out.println("Options : " + eElement.getElementsByTagName("options").item(i).getTextContent());
+	                		options.add(eElement.getElementsByTagName("options").item(i).getTextContent());
+	                	}
+	                	question.setOptions(options);
+	                }
+	                question.setPoll_id(getLastPollId(em));
+	                
+	                if(!em.getTransaction().isActive())
+	                    em.getTransaction().begin(); 
+	        		try {
+	        			em.persist(question);
+	        			em.getTransaction().commit();
+	        		}catch (Exception e){
+	        			System.out.println(e.toString());
+	        		}
+	     
+	            }
+	        }
+	        } catch (Exception e) {
+	        e.printStackTrace();
+	        }
+	}
+	public static List<entities.Poll> getActivePolls (EntityManager em)
+	{
+		Query query = em.createQuery("select p from Poll p where p.status = :status");
+		query.setParameter("status", true);
+		return query.getResultList();
+	}
+	public static List<entities.Answers> getPollAnswers (EntityManager em, Long pollId) 
+	{
+		Query query = em.createQuery("select a from Answers a where a.poll_id = :pollId");
+		query.setParameter("pollId", pollId);
+		return query.getResultList();
+	}
+	
+	
 
 }

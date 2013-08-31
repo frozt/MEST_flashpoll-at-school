@@ -10,15 +10,16 @@ import javax.persistence.*;
  */
 @Entity
 
-public class Survey implements Serializable {
+public class Poll implements Serializable {
 
 	
 	private static final long serialVersionUID = 1L;
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+	private Long owner_id;
 	private boolean status;
 
-	public Survey() {
+	public Poll() {
 		super();
 	}
 
@@ -36,6 +37,14 @@ public class Survey implements Serializable {
 
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	public Long getOwner_id() {
+		return owner_id;
+	}
+
+	public void setOwner_id(Long owner_id) {
+		this.owner_id = owner_id;
 	}
    
 }

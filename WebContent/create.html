@@ -1,0 +1,108 @@
+<html>
+    <head>
+        <style type="text/css">
+        .left {
+            display: inline-block;
+            left: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }        
+        .right
+        {
+        position:fixed;
+        left:300px;   
+        }
+        textarea {
+		    resize: none;
+		}
+        
+        </style>
+        <script src="http://code.jquery.com/jquery-2.0.3.js"></script>
+        <script src="js/FileSaver.js" type="text/javascript"></script>
+        <script>
+        /*
+            $(document).ready(function(){
+              $(".type").hide();
+              $("#"+$("#questionType").val()).show();
+              });
+            function typeChanged() {
+            	var contents = $(document).find(".type")
+            	contents.each(function() {
+            		if($(this).attr("id") == $("#questionType").val())
+            			$(this).show();
+            		else
+            			$(this).hide();
+            	});
+            } */
+
+            function uploadFile() {
+                var file = $('#import').get(0).files[0]; // FileList object
+             /*   var reader = new FileReader();
+                reader.onload = function(event) {
+                	alert("onload started");
+                    alert(reader.toLocaleString());     
+                };
+                reader.readAsBinary(file);               
+                */
+                var formData = new FormData();
+                formData.append("file", file);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "FileServlet");
+                xhr.send(formData);
+                var response = xhr.responseText;
+                alert(response);
+              }
+
+
+              
+        </script>
+        
+    </head>
+    <body>
+   <header><h2>MEST</h2></header>
+
+	<p>    		
+                <input class="Right" type="file" accept=".xml" id="import"/>
+                <label class="left" for="import">Import Poll </label>
+    </p>
+    <!-- 
+    <p>            
+                <label class="left" for="questionNo">Total Question Number: </label>
+                <input class="right" type="number" id="questionNo" autocomplete="off">
+     </p>
+     <p>           
+                <label class="left" for="questionType">Select Question Type: </label>
+                <select class="right" id = "questionType" onchange="typeChanged()">
+                       <option value = "single" selected>Single Selection</option>
+                       <option value = "multiple">Multiple Selection</option>
+                       <option value = "slider">Slide</option>
+                       <option value = "textArea">Text Area</option>
+                </select>
+      </p>      
+  <p>
+  
+                <div class="type" id="single">
+                <p>
+                <label class="left" for="questionText">Question Text: </label>
+                <textarea rows="3" class="right"  id="questionText" ></textarea><br>
+                </p>
+                </div>
+
+                <div class="type" id="multiple">
+                <p>
+                <label class="left" for="questionText">Question Text: </label>
+                <textarea rows="3" class="right"  id="questionText" ></textarea>
+                </p>
+                <p>
+                <label class="left" for="choiceNum">Number of Choices: </label>
+                <input class="right" type="number" id="choiceNum" value="3" autocomplete="off">
+                </p>
+                </div>
+              -->
+                <p>
+                
+                <input class="right" type="submit" value="Submit Poll" id="submit-poll" onclick="uploadFile()">    
+                </p>
+    </body>
+</html>

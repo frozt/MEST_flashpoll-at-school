@@ -25,4 +25,12 @@
     <servlet-name>UserServlet</servlet-name>
     <url-pattern>/UserServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>FileServlet</servlet-name>
+    <servlet-class>servlets.FileServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>FileServlet</servlet-name>
+    <url-pattern>/FileServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

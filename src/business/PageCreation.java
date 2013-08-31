@@ -16,7 +16,7 @@ public class PageCreation {
 	 public String question (entities.Question q, int totalQuestion)
 	    {
 		 String question="<div data-role=\"page\" id=\"question"+q.getNumber()+"\"> "
-	                +" <div data-role=\"header\"><h1>MEST</h1></div>"
+	                +" <div data-role=\"header\"><h1>Flashpoll@Schools</h1></div>"
 	                + " <div data-role=\"content\"> ";
 	        
 	        switch(q.getType())
@@ -49,8 +49,8 @@ public class PageCreation {
 	                    + q.getOptions().get(i) +"</label> ";
 	        }
 	        content += " </fieldset> ";
-	        content += progress(q.getNumber(),totalQuestion);
 	        content += bottomButtons(q.getNumber(), totalQuestion);
+	        content += progress(q.getNumber(),totalQuestion);
 	        content += "</div></div>";
 	        
 	        return content;
@@ -64,8 +64,8 @@ public class PageCreation {
 	                    + q.getOptions().get(i) +"</label> ";
 	        }
 	        content += " </fieldset> ";
-	        content += progress(q.getNumber(),totalQuestion);
 	        content += bottomButtons(q.getNumber(), totalQuestion);
+	        content += progress(q.getNumber(),totalQuestion);
 	        content += "</div></div>";
 	        return content;
 	    }
@@ -76,17 +76,17 @@ public class PageCreation {
 	                + "min=\""+ q.getOptions().get(0)+ "\" "
 	                + "max=\"" +q.getOptions().get(1) +"\" value=\"5\">";
 	        content += " </form> ";
-	        content += progress(q.getNumber(),totalQuestion);
 	        content += bottomButtons(q.getNumber(), totalQuestion);
+	        content += progress(q.getNumber(),totalQuestion);
 	        content += "</div></div>";
 	        return content;
 	    }
 	    private String text(entities.Question q, int totalQuestion)
 	    {
 	        String content = "<label for=\"textarea\">"+q.getText()+"</label>";
-	        content += "<textarea rows=\"4\" class=\"answers\" name=\"textarea\" id=\"textarea\"></textarea>";               
-	        content += progress(q.getNumber(),totalQuestion);
+	        content += "<textarea rows=\"4\" class=\"answers\" name=\"textarea\" id=\"textarea\"></textarea>";
 	        content += bottomButtons(q.getNumber(), totalQuestion);
+	        content += progress(q.getNumber(),totalQuestion);
 	        content += "</div></div>";
 	        return content;
 	    }
@@ -138,8 +138,8 @@ public class PageCreation {
 	    {
 	        String content=" <div data-role=\"page\" id=\"final\"><div data-role=\"header\"><h1>MEST</h1></div> "
 	                +" <div data-role=\"content\"><h1>Thank you for participation</h1>This is the end of survey."
-	                + " <br>If you want to change anything you can go back with Previous button or you can finish the survey with Submit button. "
-	                +"<fieldset class=\"ui-grid-a\"><div class=\"ui-block-a\"><input type=\"button\" value=\"Previous\" data-theme=\"b\" "
+	                + " <br>Your results are submitted."
+	                +"<fieldset class=\"ui-grid-a\"><div class=\"ui-block-a\"><input type=\"button\" value=\"Homepage\" data-theme=\"b\" "
 	                +" onclick=\"window.location = 'poll.html'; \"></div></fieldset></div></div>";
 	        return content;
 	    }

@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -11,7 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+import com.mysql.jdbc.StringUtils;
+import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
+import org.apache.commons.*;
 
 import business.Main;
 
@@ -37,14 +40,30 @@ public class PollServlet extends HttpServlet {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
 	    
-
-		business.PageCreation pc = new business.PageCreation();
-	    long poll_id =Long.parseLong(request.getParameter("poll"));
+	    if(request.getParameter("requestType").equals("activePolls")) {
+	    	List<entities.Poll> activePolls = Main.getActivePolls(em);
+	    	response.setContentType("text");
+	    	response.setCharacterEncoding("UTF-8");
+	    	String resp = "" ;
+	    	for(int i =0; i < activePolls.size() -1;i++) {
+	    		resp += activePolls.get(i).getId().toString() + ";"; 
+	    	}
+	    	resp += activePolls.get(activePolls.size() -1).getId().toString();
+	    	response.getWriter().write(resp);
+	    	System.out.println("Response is :" +resp);
+	    }
+	    else {
+	    	System.out.println(request.toString());
+			business.PageCreation pc = new business.PageCreation();
+		    long poll_id =Long.parseLong(request.getParameter("poll"));
+		    
+		    response.setContentType("text/html");  
+		    response.setCharacterEncoding("UTF-8"); 
+		    response.getWriter().write(pc.create(Main.getQuestions(em, poll_id))); 
+		    System.out.println("Poll id is "+poll_id);
+		    System.out.println(pc.create(Main.getQuestions(em, poll_id)));
+	    }
 	    
-	    response.setContentType("text/html");  
-	    response.setCharacterEncoding("UTF-8"); 
-	    response.getWriter().write(pc.create(Main.getQuestions(em, poll_id))); 
-	    System.out.println(pc.create(Main.getQuestions(em, poll_id)));
 	    em.close();
 	    factory.close();
 	}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="poll">
+  <xs:complexType>
+    <xs:sequence>
+	<xs:element name="question" maxOccurs="unbounded" minOccurs="1">
+	  <xs:complexType>
+	    <xs:sequence>
+	      <xs:element name="text" type="xs:string"/>
+	      <xs:element name="type">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+				  <xs:enumeration value="single"/>
+				  <xs:enumeration value="multiple"/>
+				  <xs:enumeration value="slide"/>
+				  <xs:enumeration value="text"/>
+				</xs:restriction>
+			 </xs:simpleType>
+	      </xs:element>
+	      <xs:element name="number" type="xs:integer"/>
+	      <xs:element name="options" type="xs:string"  maxOccurs="unbounded" minOccurs="0"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element> 
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+</xs:schema> 
