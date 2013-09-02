@@ -14,6 +14,9 @@ import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
 import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import java.lang.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -116,7 +119,7 @@ public class Main {
 		}
 		return true;
 	}
-	public static long insertPoll(EntityManager em, String pollXml)
+	public static long insertPoll(EntityManager em, String pollXml) throws URISyntaxException
 	{
 		if(validateXml(pollXml))
 		{
@@ -126,11 +129,23 @@ public class Main {
 			return -1;
 		return getLastPollId(em);
 	}
-	private static boolean validateXml(String pollXml) {
+	private static boolean validateXml(String pollXml) throws URISyntaxException {
 		Source schemaFile = new StreamSource(new File("schema.xsd"));
         //Source xmlFile = new StreamSource(new File("../src/poll.xml"));
 		//System.out.println(String.class.getResource("/schema.xsd").getPath());
 		//Source schemaFile = new StreamSource(new File(String.class.getResource("/schema.xsd").getPath()));
+		URL url = ClassLoader.getSystemResource("/schema.xsd");
+		System.out.println("-------------------------------");
+		if(url == null) {
+			System.out.println("Url is null");
+		}
+		else {
+		System.out.println(url.toString());
+		System.out.println(url.getPath());
+		System.out.println(url.toURI());
+		}
+		
+		
         StringReader reader = new StringReader(pollXml);
         Source xmlFile = new javax.xml.transform.stream.StreamSource(reader);
         

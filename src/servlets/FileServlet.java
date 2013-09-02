@@ -3,6 +3,7 @@ package servlets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -72,11 +73,8 @@ public class FileServlet extends HttpServlet {
                     String xml = item.getString();
                     System.out.println(xml);
                     response.setContentType("text");
-                 /*   OutputStreamWriter writer = new OutputStreamWriter(stream, "UTF-8");
-                    String userName=(String)req.getSession().getAttribute("username");
-                    writer.write(userName);
-                    writer.flush(); */
-                    long poll_id = Main.insertPoll(em, xml);
+
+                    long poll_id = Main.insertPoll(em, xml);                    
                     if(poll_id > 0)
                     	response.getWriter().write(""+poll_id);
                     else
@@ -84,7 +82,7 @@ public class FileServlet extends HttpServlet {
                     System.out.println("Poll id is:" + poll_id);
                 
             }
-        } catch (FileUploadException e) {
+        } catch (FileUploadException | URISyntaxException e) {
             throw new ServletException("Parsing file upload failed.", e);
         }
 		em.close();

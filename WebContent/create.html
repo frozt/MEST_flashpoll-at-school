@@ -36,22 +36,19 @@
             } */
 
             function uploadFile() {
-                var file = $('#import').get(0).files[0]; // FileList object
-             /*   var reader = new FileReader();
-                reader.onload = function(event) {
-                	alert("onload started");
-                    alert(reader.toLocaleString());     
-                };
-                reader.readAsBinary(file);               
-                */
+                var file = $('#import').get(0).files[0]; 
+
                 var formData = new FormData();
                 formData.append("file", file);
 
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "FileServlet");
-                xhr.send(formData);
-                var response = xhr.responseText;
-                alert(response);
+                xhr.onreadystatechange=function() {
+                	  if (xhr.readyState==4) {
+                	   alert(xhr.responseText);
+                	  }
+                	 };
+                xhr.send(formData);                
               }
 
 
