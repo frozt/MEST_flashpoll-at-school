@@ -12,11 +12,21 @@
         $(document).ready(function() {   
         	 var results;
             $('#submit').click(function(event) {  
-            	var pollId = $('#poll_id').val();    
-            $.get('PollServlet',{poll:pollId},function(responseText) { 
-                   $(responseText).insertAfter('#occupation');
-                });
-            window.location = '#gender';
+            	var pollId = $('#poll_id').val(); 
+            	if(numberCheck(pollId)) {
+            		var createPoll = "createPoll";
+                    $.get('PollServlet',{poll:pollId,requestType:createPoll},function(responseText) { 
+                           $(responseText).insertAfter('#occupation');
+                        });
+                    if(typeof(Storage)!=="undefined") {
+        	              localStorage.poll_id=pollId;
+        	        }
+                    window.location = '#gender';
+            	}
+            	else {
+            		alert("Please enter a valid number");
+                    $('#poll_id').val('');
+            	}
             });         
            
         });
@@ -85,6 +95,20 @@
             results.splice(startingPoint,results.length - startingPoint);
             window.location = '#question' +pageNumber;
         }
+        function ageCheck () {
+        	if(!numberCheck($('#ageBox').val())) {
+        		alert("Enter a valid number.");
+        		$('#ageBox').val('');
+        	}
+        }
+        function numberCheck (value) 
+        {
+            if(value < 1 || isNaN(value)) {
+                return false;
+            }
+            if (value >0)
+            	return true;
+        }
         </script>
 
 <meta http-equiv=Content-Type content=text/html;charset=iso-8859-1 />
@@ -98,7 +122,7 @@
             <div data-role="content">
 	            <div data-role="fieldcontain">
 		            <label for="poll_id">Enter Poll ID:</label>
-		            <input type="number" id="poll_id"/>
+		            <input type="number" id="poll_id" min="1"/>
 	            </div>
 	            <div class="button">
 	            	<input type="button" id="submit" value="Start"/>
@@ -132,7 +156,7 @@
         <div data-role="content">
             <div data-role="fieldcontain">
 			    <label for="ageBox">Your age:</label>
-	    		<input type="number" name="birthday" id="ageBox"/>
+	    		<input type="number" name="birthday" id="ageBox" required onchange="ageCheck();"/>
 	    	
 	    	<fieldset class="ui-grid-a">
 			    <div class="ui-block-a"><input type="button" value="Previous" data-theme="b" onclick="window.location = '#gender'; "></div>

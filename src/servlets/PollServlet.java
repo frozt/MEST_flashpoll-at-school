@@ -52,8 +52,9 @@ public class PollServlet extends HttpServlet {
 	    	response.getWriter().write(resp);
 	    	System.out.println("Response is :" +resp);
 	    }
-	    else {
-	    	System.out.println(request.toString());
+	    else if (request.getParameter("requestType").equals("createPoll")){
+	    	System.out.println("Create poll started");
+	    	System.out.println(request.getParameter("poll"));
 			business.PageCreation pc = new business.PageCreation();
 		    long poll_id =Long.parseLong(request.getParameter("poll"));
 		    
@@ -61,7 +62,9 @@ public class PollServlet extends HttpServlet {
 		    response.setCharacterEncoding("UTF-8"); 
 		    response.getWriter().write(pc.create(Main.getQuestions(em, poll_id))); 
 		    System.out.println("Poll id is "+poll_id);
-		    System.out.println(pc.create(Main.getQuestions(em, poll_id)));
+	    }
+	    else {
+	    	System.out.println("Unknown request type");
 	    }
 	    
 	    em.close();

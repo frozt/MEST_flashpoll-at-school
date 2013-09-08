@@ -45,13 +45,11 @@
                 xhr.open("POST", "FileServlet");
                 xhr.onreadystatechange=function() {
                 	  if (xhr.readyState==4) {
-                	   alert(xhr.responseText);
+                	   alert("Poll Number is: "+xhr.responseText);
                 	  }
                 	 };
                 xhr.send(formData);                
               }
-
-
               
         </script>
         

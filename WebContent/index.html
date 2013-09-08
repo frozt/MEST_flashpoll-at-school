@@ -9,22 +9,31 @@
         <link rel="stylesheet" type="text/css" href="css/mobiscroll.custom-2.6.2.min.css" /> 
         <link href="css/style.css" rel="stylesheet">
         <script>
-            $(document).ready(function() {                        
-                $('#submit').click(function(event) {  
-                	var mail = $('#email').val();    
-                $.get('UserServlet',{email:mail},function(responseText) { 
-                	if(typeof(Storage)!=="undefined") {
-			              localStorage.email=mail;
-			        }
-                	//alert(responseText)
-                       if(responseText === "exist")
-                    	   window.location = 'poll.html';
-                       else
-                    	   window.location = 'default.html';
-                    	   
-                    });
+            $(document).ready(function() {
+            	
+                $('#submit').click(function(event) {
+                	var mail = $('#email').val(); 
+                	if(validateEmail(mail)){
+                        $.get('UserServlet',{email:mail},function(responseText) { 
+                        	if(typeof(Storage)!=="undefined") {
+        			              localStorage.email=mail;
+        			        }
+                               if(responseText === "exist")
+                            	   window.location = 'poll.html';
+                               else
+                            	   window.location = 'default.html';   
+                            });
+                	}
+                	else {
+                		alert("Please enter a valid email.");
+                		$('#email').val('');
+                	}
                 });
             });
+            function validateEmail(email) { 
+            	var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(email);
+            } 
         </script>
 <meta charset="ISO-8859-1">
 <title>Flashpoll@Schools</title>
@@ -37,10 +46,10 @@
             <div data-role="content">
                 <div data-role="fieldcontain">
                 <label for="email">Please enter your email: </label>
-                <input type="text" id="email"><br>
+                <input type="email" id="email" required><br>
                 </div>
                 <div class="button">
-                <button type="button" id="submit">Submit</button>
+                <input type="submit" id="submit" value="Submit">
                 </div>
             </div>
 </div>
