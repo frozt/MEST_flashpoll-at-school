@@ -15,49 +15,32 @@
         textarea {
 		    resize: none;
 		}
-        
+        .logout-btn{
+    	float:right;
+		  bottom: 15px;
+		  position: relative;
+		  top: 15px;
+		  width:300px
+		}
         </style>
         <script src="http://code.jquery.com/jquery-2.0.3.js"></script>
         <script src="js/FileSaver.js" type="text/javascript"></script>
         <script src="js/Blob.js" type="text/javascript"></script>
-        <script>
-        $(document).ready(function() {
-        	var activePolls = "activePolls" ;
-        	$.get('PollServlet',{requestType:activePolls},function(responseText) {
-        		if(responseText != null) {
-        			if(responseText.indexOf(";") != -1) {
-        				var polls = responseText.split(";");
-        				$("#pollsList").html("");
-        				for(var i=0; i<polls.length; i++) {
-        					$("#pollsList").append("<input type=\"radio\" name=\"polls\" id=\"" + polls[i] + "\" value=\""+polls[i]+"\"/>"+polls[i]+"<br>");
-        				}
-                        
-        			}
-        			else
-        				$("#pollsList").append("<input type=\"radio\" name=\"polls\" id=\"" + responseText + "\" value=\""+responseText+"\"/>"+responseText+"<br>");
-        		}
-        	});
-        });
-        function exportFile() {
-        	var FileId = $('input[name="polls"]:checked').val();
-        	$.get('FileServlet',{pollId:FileId},function(responseText) {
-        		var fileArray = [];
-        		fileArray[0] = responseText;
-        		var blob = new Blob(fileArray, { "type" : "text" });
-        		saveAs(blob,"Poll"+FileId+" results.txt");
-        	});
-        }
-        </script>
+        <script src="js/active.js" type="text/javascript"></script>
         
     </head>
     <body>
     <header><h2>Flashpoll@Schools</h2></header>
+    <div class="logout-btn">
+        <input type="submit" value="Log out" id="import" onClick="logout()">
+        </div>	 
     <div id="polls">
     	<fieldset>
             <legend>Active Polls List</legend>
                  <div id="pollsList"></div>
         </fieldset>
     </div>
-    	<input class="right" type="submit" value="Export Poll" id="export-poll" onclick="exportFile()">    
+    	<input class="right" type="submit" value="Export Poll" id="export-poll" onclick="exportFile()"> 
+    	<input class="left" type="submit" value="Homepage" id="homepage" onClick="window.location='admin.html'">    
     </body>
 </html>

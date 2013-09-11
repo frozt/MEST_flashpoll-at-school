@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import business.Main;
+import business.userController;
 
 /**
  * Servlet implementation class EmailServlet
@@ -36,10 +37,19 @@ public class UserServlet extends HttpServlet {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
 	    response.setContentType("text");
-	    if(Main.checkEmail(em, request.getParameter("email")))
-	    	response.getWriter().write("exist");
-	    else
-	    	response.getWriter().write("not exist");
+	    if(request.getParameter("userType").equals("user")) {
+	    	if(Main.checkEmail(em, request.getParameter("email")))
+		    	response.getWriter().write("exist");
+		    else
+		    	response.getWriter().write("not exist");
+	    }
+	    else if(request.getParameter("userType").equals("admin")) {
+	    	if(userController.checkAdmin(em, request.getParameter("username"), request.getParameter("password")))
+	    		response.getWriter().write("true");
+		    else
+		    	response.getWriter().write("false");
+	    }
+	    
 	    em.close();
 	    factory.close();
 	}
