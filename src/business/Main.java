@@ -9,10 +9,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-
-import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.User;
-import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import java.lang.*;
 import java.net.URISyntaxException;
 import java.net.URL;

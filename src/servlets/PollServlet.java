@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mysql.jdbc.StringUtils;
-import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
 import org.apache.commons.*;
 
 import business.Main;

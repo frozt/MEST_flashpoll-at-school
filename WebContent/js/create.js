@@ -2,11 +2,11 @@ if(sessionStorage.loggedIn != "true" )
             	window.location = 'login.html';
             function uploadFile() {
                 var file = $('#import').get(0).files[0]; 
-
                 var formData = new FormData();
                 formData.append("file", file);
 
                 var xhr = new XMLHttpRequest();
+                alert("xhr created");
                 xhr.open("POST", "FileServlet");
                 xhr.onreadystatechange=function() {
                 	  if (xhr.readyState==4) {
