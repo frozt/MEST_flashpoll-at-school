@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javax.persistence.*;
 
@@ -18,6 +19,7 @@ public class Poll implements Serializable {
     private Long id;
 	private Long owner_id;
 	private boolean status;
+	private ArrayList<String> feedback_info;
 
 	public Poll() {
 		super();
@@ -46,5 +48,14 @@ public class Poll implements Serializable {
 	public void setOwner_id(Long owner_id) {
 		this.owner_id = owner_id;
 	}
+
+	public ArrayList<String> getFeedback_info() {
+		return feedback_info;
+	}
+
+	public void setFeedback_info(ArrayList<String> feedback_info) {
+		this.feedback_info = feedback_info;
+	}
+
    
 }

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.*;
 
 import business.Main;
+import business.UserFeedback;
 
 /**
  * Servlet implementation class DbServlet
@@ -37,9 +38,10 @@ public class PollServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
+	    Main main = new Main();
 	    
 	    if(request.getParameter("requestType").equals("activePolls")) {
-	    	List<entities.Poll> activePolls = Main.getActivePolls(em);
+	    	List<entities.Poll> activePolls = main.getActivePolls(em);
 	    	response.setContentType("text");
 	    	response.setCharacterEncoding("UTF-8");
 	    	String resp = "" ;
@@ -58,9 +60,9 @@ public class PollServlet extends HttpServlet {
 		    
 		    response.setContentType("text/html");  
 		    response.setCharacterEncoding("UTF-8"); 
-		    response.getWriter().write(pc.create(Main.getQuestions(em, poll_id))); 
+		    response.getWriter().write(pc.create(main.getQuestions(em, poll_id))); 
 		    System.out.println("Poll id is "+poll_id);
-		    System.out.println(pc.create(Main.getQuestions(em, poll_id)));
+		    System.out.println(pc.create(main.getQuestions(em, poll_id)));
 	    }
 	    else {
 	    	System.out.println("Unknown request type");
@@ -76,12 +78,18 @@ public class PollServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
+	    Main main = new Main();
 	    
 	    String email = request.getParameter("email");
 		Long pollId = Long.parseLong((request.getParameter("pollId")));
 		String answers = request.getParameter("answers");
-		if(Main.insertAnswers(em, email, pollId, answers))
-			response.getWriter().write("success");
+		System.out.println("Insert answer servlet started");
+		if(main.insertAnswers(em, email, pollId, answers)) {
+			UserFeedback ufeed = new UserFeedback();
+			response.getWriter().write(ufeed.addUserFeedback(em, pollId));
+			System.out.println(response);
+		}
+			
 		else
 			response.getWriter().write("fail");
 		

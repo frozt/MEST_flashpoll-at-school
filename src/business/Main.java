@@ -37,28 +37,23 @@ public class Main {
 	private static EntityManagerFactory factory;
 	private static final String PERSISTENCE_UNIT_NAME = "flashpoll";
 	
-	public static void main() {
-		// TODO Auto-generated method stub
-		factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-	    EntityManager em = factory.createEntityManager();
-//	    create(em);
-//	    load(em);
-//	    
-	    em.close();
+	public Main() {
+		
 	}
-	public static List<Question> getQuestions(EntityManager em, long poll_id)
+
+	public  List<Question> getQuestions(EntityManager em, long poll_id)
 	{
 		Query query = em.createQuery("select q from Question q where q.poll_id = :poll_id");
 		query.setParameter("poll_id", poll_id);
 		return query.getResultList();
 		
 	}
-	public static Long getLastPollId (EntityManager em)
+	public  Long getLastPollId (EntityManager em)
 	{
 		Query query = em.createQuery("select MAX(s.id) from Poll s");
 		return (long)query.getResultList().get(0);
 	}
-	public static boolean checkEmail (EntityManager em, String email)
+	public  boolean checkEmail (EntityManager em, String email)
 	{
 		try{
 			if(em.find(entities.User.class, email) != null)
@@ -77,7 +72,7 @@ public class Main {
 		}
 
 	}
-	public static boolean insertUser(EntityManager em, String email, String gender, String occupation, int age)
+	public boolean insertUser(EntityManager em, String email, String gender, String occupation, int age)
 	{
 		System.out.println("insertUser started");
 		entities.User user = new entities.User();
@@ -97,7 +92,7 @@ public class Main {
 		System.out.println("Successful user insert with "+email+" "+age);
 		return true;
 	}
-	public static boolean insertAnswers(EntityManager em, String user_email, Long poll_id, String answers)
+	public boolean insertAnswers(EntityManager em, String user_email, Long poll_id, String answers)
 	{
 		entities.Answers answ = new entities.Answers();
 		answ.setPoll_id(poll_id);
@@ -115,7 +110,7 @@ public class Main {
 		}
 		return true;
 	}
-	public static long insertPoll(EntityManager em, String pollXml) throws URISyntaxException
+	public long insertPoll(EntityManager em, String pollXml) throws URISyntaxException
 	{
 		if(validateXml(pollXml))
 		{
@@ -125,7 +120,7 @@ public class Main {
 			return -1;
 		return getLastPollId(em);
 	}
-	private static boolean validateXml(String pollXml) throws URISyntaxException {
+	private boolean validateXml(String pollXml) throws URISyntaxException {
 		Source schemaFile = new StreamSource(new File("schema.xsd"));
         //Source xmlFile = new StreamSource(new File("../src/poll.xml"));
 		//System.out.println(String.class.getResource("/schema.xsd").getPath());
@@ -147,7 +142,6 @@ public class Main {
         
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         
-
         try{
             Schema schema = schemaFactory.newSchema(schemaFile);
             Validator validator = schema.newValidator();
@@ -168,7 +162,7 @@ public class Main {
         }
         return true;
 	}
-	private static void parseXml(EntityManager em, String pollXml)
+	private void parseXml(EntityManager em, String pollXml)
 	{
 		try {
 
@@ -179,11 +173,22 @@ public class Main {
 	        doc.getDocumentElement().normalize();
 	     
 	        System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-	     
-	        NodeList nList = doc.getElementsByTagName("question");
+	        
+	        // parse feedback info elements
+	        NodeList feedback = doc.getElementsByTagName("user_feedback");
+	        ArrayList<String> feedback_list = new ArrayList<>();
 
+	        for (int temp = 0; temp < feedback.getLength(); temp++) {
+	        	Node info = feedback.item(temp);
+	        	Element eElement = (Element) info;
+	        	feedback_list.add(eElement.getElementsByTagName("info").item(temp).getTextContent());	        	
+	        }
+
+	        // create and commit poll object into database
 	        Poll poll = new Poll();
             poll.setStatus(true);
+            poll.setFeedback_info(feedback_list);
+            
             em.getTransaction().begin();
     		System.out.println("transaction started");
     		try {
@@ -192,7 +197,9 @@ public class Main {
     		}catch (Exception e){
     			System.out.println(e.toString());
     		}
-	     
+    		// parse question elements
+    		NodeList nList = doc.getElementsByTagName("question");
+    		
 	        for (int temp = 0; temp < nList.getLength(); temp++) {
 	     
 	            Node nNode = nList.item(temp);
@@ -237,13 +244,13 @@ public class Main {
 	        e.printStackTrace();
 	        }
 	}
-	public static List<entities.Poll> getActivePolls (EntityManager em)
+	public List<entities.Poll> getActivePolls (EntityManager em)
 	{
 		Query query = em.createQuery("select p from Poll p where p.status = :status");
 		query.setParameter("status", true);
 		return query.getResultList();
 	}
-	public static List<entities.Answers> getPollAnswers (EntityManager em, Long pollId) 
+	public List<entities.Answers> getPollAnswers (EntityManager em, Long pollId) 
 	{
 		Query query = em.createQuery("select a from Answers a where a.poll_id = :pollId");
 		query.setParameter("pollId", pollId);

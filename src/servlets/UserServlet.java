@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import business.Main;
-import business.userController;
+import business.UserController;
 
 /**
  * Servlet implementation class EmailServlet
@@ -36,15 +36,17 @@ public class UserServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
+	    Main main = new Main();
+	    
 	    response.setContentType("text");
 	    if(request.getParameter("userType").equals("user")) {
-	    	if(Main.checkEmail(em, request.getParameter("email")))
+	    	if(main.checkEmail(em, request.getParameter("email")))
 		    	response.getWriter().write("exist");
 		    else
 		    	response.getWriter().write("not exist");
 	    }
 	    else if(request.getParameter("userType").equals("admin")) {
-	    	if(userController.checkAdmin(em, request.getParameter("username"), request.getParameter("password")))
+	    	if(UserController.checkAdmin(em, request.getParameter("username"), request.getParameter("password")))
 	    		response.getWriter().write("true");
 		    else
 		    	response.getWriter().write("false");
@@ -61,11 +63,13 @@ public class UserServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
+	    Main main = new Main();
+	    
 		String email = request.getParameter("email");
 		String gender = request.getParameter("gender");
 		String occupation = request.getParameter("occupation");
 		int age = Integer.parseInt(request.getParameter("age"));
-		if(Main.insertUser(em, email, gender, occupation, age))
+		if(main.insertUser(em, email, gender, occupation, age))
 			response.getWriter().write("success");
 		else
 			response.getWriter().write("fail");

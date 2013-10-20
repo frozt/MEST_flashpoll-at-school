@@ -61,7 +61,7 @@ $(document).ready(function() {
                 var pollId = localStorage.poll_id;
                 var answers = results.join(";");
                 $.post('PollServlet',{email:mail, pollId:pollId, answers:answers},function(data) {
-					//alert(data);
+                	$("#feedback").append(data);
 				}); 
                 if(sessionStorage.poll_id) {
     				sessionStorage.poll_id="";

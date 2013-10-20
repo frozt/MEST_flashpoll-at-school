@@ -5,7 +5,7 @@ import javax.persistence.Query;
 
 import entities.Admin;
 
-public class userController {
+public class UserController {
 
 	public static boolean checkAdmin (EntityManager em, String username, String password) {
 		try{

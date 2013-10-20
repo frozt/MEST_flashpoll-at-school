@@ -140,7 +140,7 @@ public class PageCreation {
 	    {
 	        String content=" <div data-role=\"page\" id=\"final\"><div data-role=\"header\"><h1>MEST</h1></div> "
 	                +" <div data-role=\"content\"><h1>Thank you for participation</h1>This is the end of survey."
-	                + " <br>Your results are submitted."
+	                + " <br>Your results are submitted.<div id=\"feedback\"></div>"
 	                +"<fieldset class=\"ui-grid-a\"><div class=\"ui-block-a\"><input type=\"button\" value=\"Homepage\" data-theme=\"b\" "
 	                +" onclick=\"window.location = 'poll.html'; \"></div></fieldset></div></div>";
 	        return content;

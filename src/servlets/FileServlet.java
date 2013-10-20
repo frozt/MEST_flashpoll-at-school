@@ -45,9 +45,10 @@ public class FileServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
+	    Main main = new Main();
 
 	    Long poll_id = Long.parseLong(request.getParameter("pollId"));
-	    List<entities.Answers> answers = Main.getPollAnswers(em, poll_id);
+	    List<entities.Answers> answers = main.getPollAnswers(em, poll_id);
 	    String results = "";
 	    for(int i =0; i < answers.size() -1;i++) {
 	    	results += answers.get(i).getUser_email() +";" +answers.get(i).getAnswers() +"\r\n"; 
@@ -64,6 +65,7 @@ public class FileServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
+	    Main main = new Main();
 		try {
 			System.out.println("post started");
             List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
@@ -74,7 +76,7 @@ public class FileServlet extends HttpServlet {
                     System.out.println(xml);
                     response.setContentType("text");
 
-                    long poll_id = Main.insertPoll(em, xml);                    
+                    long poll_id = main.insertPoll(em, xml);                    
                     if(poll_id > 0)
                     	response.getWriter().write(""+poll_id);
                     else
