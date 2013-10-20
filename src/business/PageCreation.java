@@ -74,7 +74,9 @@ public class PageCreation {
 	        String content = " <form><label for=\"slider\">"+q.getText()+"</label>";
 	        content += "<input type=\"range\" class=\"ranger\" name=\"slider\" id=\"slider\" data-highlight=\"true\" "
 	                + "min=\""+ q.getOptions().get(0)+ "\" "
-	                + "max=\"" +q.getOptions().get(1) +"\" value=\"5\">";
+	                + "max=\"" +q.getOptions().get(1) +"\">";
+	        content += " <label class=\"slider_min\" for=\"slider\">"+ q.getOptions().get(2)+"</label> "
+	        		+ " <label class=\"slider_max\" for=\"slider\">"+ q.getOptions().get(3)+"</label><br><br> ";
 	        content += " </form> ";
 	        content += bottomButtons(q.getNumber(), totalQuestion);
 	        content += progress(q.getNumber(),totalQuestion);

@@ -12,3 +12,11 @@ input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+.slider_min {
+    text-align:left;
+    float:left;
+}
+.slider_max {
+    text-align:right;
+    float:right;
+}

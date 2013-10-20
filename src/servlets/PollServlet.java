@@ -60,6 +60,7 @@ public class PollServlet extends HttpServlet {
 		    response.setCharacterEncoding("UTF-8"); 
 		    response.getWriter().write(pc.create(Main.getQuestions(em, poll_id))); 
 		    System.out.println("Poll id is "+poll_id);
+		    System.out.println(pc.create(Main.getQuestions(em, poll_id)));
 	    }
 	    else {
 	    	System.out.println("Unknown request type");
