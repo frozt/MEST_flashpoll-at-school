@@ -5,15 +5,24 @@ $(document).ready(function() {
 				var createPoll = "createPoll";
 				$.get('PollServlet', {
 					requestType : createPoll,
-					poll : pollId
+					poll : pollId,
+					email : localStorage.email
 				}, function(responseText) {
-					$(responseText).insertAfter('#question');
+					if(responseText === "exist") {
+						alert("You already responded this poll. You can attend each poll once.");
+						window.location = 'poll.html';
+					}
+					else {
+						$(responseText).insertAfter('#question');
+						if (typeof (Storage) !== "undefined") {
+							localStorage.poll_id = pollId;
+						}
+						window.location = '#question';
+						window.location = '#question1';
+					}
+					
 				});
-				if (typeof (Storage) !== "undefined") {
-					localStorage.poll_id = pollId;
-				}
-				window.location = '#question';
-				window.location = '#question1';
+				
 			}
 		});
 		if(sessionStorage.poll_id) {

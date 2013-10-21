@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.*;
 
 import business.Main;
+import business.UserController;
 import business.UserFeedback;
 
 /**
@@ -54,15 +55,23 @@ public class PollServlet extends HttpServlet {
 	    }
 	    else if (request.getParameter("requestType").equals("createPoll")){
 	    	System.out.println("Create poll started");
-	    	System.out.println(request.getParameter("poll"));
+
 			business.PageCreation pc = new business.PageCreation();
 		    long poll_id =Long.parseLong(request.getParameter("poll"));
-		    
+		    String user_email = request.getParameter("email");
 		    response.setContentType("text/html");  
-		    response.setCharacterEncoding("UTF-8"); 
-		    response.getWriter().write(pc.create(main.getQuestions(em, poll_id))); 
-		    System.out.println("Poll id is "+poll_id);
-		    System.out.println(pc.create(main.getQuestions(em, poll_id)));
+		    response.setCharacterEncoding("UTF-8");
+		    
+		    UserController userCont = new UserController();
+	    	if(!userCont.checkUserAnswers(em, user_email, poll_id)){
+	    		response.getWriter().write("exist");
+	    	}
+	    	else {
+	    		response.getWriter().write(pc.create(main.getQuestions(em, poll_id))); 
+			    System.out.println("Poll id is "+poll_id);
+			    System.out.println(pc.create(main.getQuestions(em, poll_id)));
+	    	}
+		    
 	    }
 	    else {
 	    	System.out.println("Unknown request type");

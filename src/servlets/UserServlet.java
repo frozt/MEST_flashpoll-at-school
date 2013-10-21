@@ -36,6 +36,7 @@ public class UserServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
+	    UserController userCont = new UserController();
 	    Main main = new Main();
 	    
 	    response.setContentType("text");
@@ -46,7 +47,7 @@ public class UserServlet extends HttpServlet {
 		    	response.getWriter().write("not exist");
 	    }
 	    else if(request.getParameter("userType").equals("admin")) {
-	    	if(UserController.checkAdmin(em, request.getParameter("username"), request.getParameter("password")))
+	    	if(userCont.checkAdmin(em, request.getParameter("username"), request.getParameter("password")))
 	    		response.getWriter().write("true");
 		    else
 		    	response.getWriter().write("false");

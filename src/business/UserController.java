@@ -7,7 +7,7 @@ import entities.Admin;
 
 public class UserController {
 
-	public static boolean checkAdmin (EntityManager em, String username, String password) {
+	public boolean checkAdmin (EntityManager em, String username, String password) {
 		try{
 			Query query = em.createQuery("select a from Admin a where a.username = :username and a.password = :password");
 			query.setParameter("username", username);
@@ -33,6 +33,16 @@ public class UserController {
 			System.out.println(e.toString());
 			return false;
 		}
+	}
+	// returns true if user did not attend the poll, false if user already attended the poll
+	public boolean checkUserAnswers (EntityManager em, String user_email, Long poll_id) {
+		Query query = em.createQuery("select a from Answers a where a.user_email = :user_email and a.poll_id = :poll_id");
+		query.setParameter("user_email", user_email);
+		query.setParameter("poll_id", poll_id);
+		if(query.getResultList().isEmpty())
+			return true;
+		else
+			return false;
 	}
 
 }
