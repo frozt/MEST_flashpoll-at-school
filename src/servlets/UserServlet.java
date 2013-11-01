@@ -41,10 +41,16 @@ public class UserServlet extends HttpServlet {
 	    
 	    response.setContentType("text");
 	    if(request.getParameter("userType").equals("user")) {
-	    	if(main.checkEmail(em, request.getParameter("email")))
-		    	response.getWriter().write("exist");
-		    else
-		    	response.getWriter().write("not exist");
+	    	System.out.println("Login servlet started");
+	    	if(request.getParameter("loginType").equals("email")) {
+	    		if(main.checkEmail(em, request.getParameter("email")))
+			    	response.getWriter().write("exist");
+			    else
+			    	response.getWriter().write("not exist");
+	    	}
+	    	else if(request.getParameter("loginType").equals("username")) {
+	    		response.getWriter().write(main.checkLogin(em, request.getParameter("username"), request.getParameter("password")));
+	    	}
 	    }
 	    else if(request.getParameter("userType").equals("admin")) {
 	    	if(userCont.checkAdmin(em, request.getParameter("username"), request.getParameter("password")))
@@ -65,15 +71,29 @@ public class UserServlet extends HttpServlet {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
 	    Main main = new Main();
+	    String loginType = request.getParameter("loginType");
+	    if(loginType.equals("email")) {
+	    	String email = request.getParameter("email");
+			String gender = request.getParameter("gender");
+			String occupation = request.getParameter("occupation");
+			int age = Integer.parseInt(request.getParameter("age"));
+			if(main.insertUser(em, email, gender, occupation, age))
+				response.getWriter().write("success");
+			else
+				response.getWriter().write("fail");
+	    }
+	    else {
+	    	String username = request.getParameter("username");
+			String gender = request.getParameter("gender");
+			String occupation = request.getParameter("occupation");
+			int age = Integer.parseInt(request.getParameter("age"));
+			if(main.updateUser(em, username, gender, occupation, age))
+				response.getWriter().write("success");
+			else
+				response.getWriter().write("fail");
+	    }
 	    
-		String email = request.getParameter("email");
-		String gender = request.getParameter("gender");
-		String occupation = request.getParameter("occupation");
-		int age = Integer.parseInt(request.getParameter("age"));
-		if(main.insertUser(em, email, gender, occupation, age))
-			response.getWriter().write("success");
-		else
-			response.getWriter().write("fail");
+		
 		em.close();
 	    factory.close();
 	}

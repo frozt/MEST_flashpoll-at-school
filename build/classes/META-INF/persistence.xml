@@ -6,6 +6,7 @@
 	<class>entities.User</class>
 	<class>entities.Answers</class>
 	<class>entities.Admin</class>
+	<class>entities.Login</class>
 	<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/flashpoll"/>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>

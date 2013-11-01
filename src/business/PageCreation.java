@@ -4,19 +4,19 @@ import java.util.List;
 import entities.*;
 
 public class PageCreation {
-	public String create(List<Question> questions)
+	public String create(List<Question> questions, String title)
     {
         String page="";
         for(Question q : questions)
-            page += question(q,questions.size());
+            page += question(q,questions.size(),title);
         page += finalPage();
         return page;
     }
 
-	 public String question (entities.Question q, int totalQuestion)
+	 public String question (entities.Question q, int totalQuestion, String title)
 	    {
 		 String question="<div data-role=\"page\" id=\"question"+q.getNumber()+"\"> "
-	                +" <div data-role=\"header\"><h1>Flashpoll@Schools</h1></div>"
+	                +" <div data-role=\"header\"><h1>"+title +"</h1></div>"
 	                + " <div data-role=\"content\"> ";
 	        
 	        switch(q.getType())
@@ -42,7 +42,7 @@ public class PageCreation {
 	    }
 	 private String single(entities.Question q, int totalQuestion)
 	    {
-	        String content = " <fieldset data-role=\"controlgroup\" data-type=\"horizontal\"> <legend>"+q.getText()+" </legend> ";
+	        String content = " <fieldset data-role=\"controlgroup\"> <legend><strong>"+q.getText()+"</strong> </legend> ";
 	        for(int i=0;i<q.getOptions().size();i++)
 	        {
 	            content += " <input type=\"radio\" class=\"answers\" name=\"singleSelection\" id=\"choice"+i+"\"><label for=\"choice"+i+"\">"
@@ -57,7 +57,7 @@ public class PageCreation {
 	    }
 	    private String multiple(entities.Question q, int totalQuestion)
 	    {
-	        String content = " <fieldset data-role=\"controlgroup\"> <legend>"+q.getText()+"<br> (You can select more than one answer) </legend> ";
+	        String content = " <fieldset data-role=\"controlgroup\"> <legend><strong>"+q.getText()+"</strong><br> (You can select more than one answer) </legend> ";
 	        for(int i=0;i<q.getOptions().size();i++)
 	        {
 	            content += " <input type=\"checkbox\" class=\"answers\" name=\"multiSelection"+i+"\" id=\"multiSelection"+i+" \" ><label for=\"multiSelection"+i+" \">"
@@ -71,7 +71,7 @@ public class PageCreation {
 	    }
 	    private String slide(entities.Question q, int totalQuestion)
 	    {
-	        String content = " <form><label for=\"slider\">"+q.getText()+"</label>";
+	        String content = " <form><label for=\"slider\"><strong>"+q.getText()+"</strong></label>";
 	        content += "<input type=\"range\" class=\"ranger\" name=\"slider\" id=\"slider\" data-highlight=\"true\" "
 	                + "min=\""+ q.getOptions().get(0)+ "\" "
 	                + "max=\"" +q.getOptions().get(1) +"\">";
@@ -85,7 +85,7 @@ public class PageCreation {
 	    }
 	    private String text(entities.Question q, int totalQuestion)
 	    {
-	        String content = "<label for=\"textarea\">"+q.getText()+"</label>";
+	        String content = "<label for=\"textarea\"><strong>"+q.getText()+"</strong></label>";
 	        content += "<textarea rows=\"4\" class=\"answers\" name=\"textarea\" id=\"textarea\"></textarea>";
 	        content += bottomButtons(q.getNumber(), totalQuestion);
 	        content += progress(q.getNumber(),totalQuestion);

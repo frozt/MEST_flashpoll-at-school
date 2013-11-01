@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
@@ -20,17 +21,20 @@ import javax.xml.validation.*;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
 import java.io.*;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
-
 import entities.Question;
 import entities.Poll;
+import entities.User;
 
 public class Main {
 
@@ -47,6 +51,11 @@ public class Main {
 		query.setParameter("poll_id", poll_id);
 		return query.getResultList();
 		
+	}
+	public String getPollTitle (EntityManager em, long poll_id) {
+		Query query = em.createQuery("select p.title from Poll p where p.id = :poll_id");
+		query.setParameter("poll_id", poll_id);
+		return query.getSingleResult().toString();
 	}
 	public  Long getLastPollId (EntityManager em)
 	{
@@ -72,8 +81,25 @@ public class Main {
 		}
 
 	}
+	public String checkLogin (EntityManager em, String username, String password) {
+		Query query = em.createQuery("select u from User u where u.username = :username and u.password=:password");
+		query.setParameter("username", username);
+		query.setParameter("password", password);
+		
+		try {
+			User user = (User) query.getSingleResult();
+			if(user.getGender() == null)
+				return "login new";
+			else
+				return "login exist";
+		}
+		catch(NoResultException e) {
+			return "login fail";
+		}
+	}
 	public boolean insertUser(EntityManager em, String email, String gender, String occupation, int age)
 	{
+		
 		System.out.println("insertUser started");
 		entities.User user = new entities.User();
 		user.setEmail(email);
@@ -88,8 +114,34 @@ public class Main {
 		}catch (Exception e){
 			System.out.println(e.toString());
 			return false;
-		}
+		}		
+		
 		System.out.println("Successful user insert with "+email+" "+age);
+		return true;
+	}
+	public boolean updateUser (EntityManager em, String username, String gender, String occupation, int age) {
+		Query query = em.createQuery("select u from User u where u.username = :username");
+		query.setParameter("username", username);
+		entities.User user;
+		try {
+			user = (User) query.getSingleResult();
+		}
+		catch(NoResultException e) {
+			return false;
+		}
+		
+		user.setAge(age);
+		user.setGender(gender);
+		user.setOccupation(occupation);
+		em.getTransaction().begin();
+		System.out.println("transaction started");
+		try {
+			em.merge(user);
+			em.getTransaction().commit();
+		}catch (Exception e){
+			System.out.println(e.toString());
+			return false;
+		}
 		return true;
 	}
 	public boolean insertAnswers(EntityManager em, String user_email, Long poll_id, String answers)
@@ -183,11 +235,16 @@ public class Main {
 	        	Element eElement = (Element) info;
 	        	feedback_list.add(eElement.getElementsByTagName("info").item(temp).getTextContent());	        	
 	        }
-
+	        // parse poll title
+	        NodeList title = doc.getElementsByTagName("title");
+	        Element titleElement = (Element) title.item(0);
+	        String titleStr = titleElement.getTextContent();
+	        
 	        // create and commit poll object into database
 	        Poll poll = new Poll();
             poll.setStatus(true);
             poll.setFeedback_info(feedback_list);
+            poll.setTitle(titleStr);
             
             em.getTransaction().begin();
     		System.out.println("transaction started");
@@ -257,6 +314,10 @@ public class Main {
 		return query.getResultList();
 	}
 	
-	
+	public String getLoginType (EntityManager em) {
+		Query query = em.createQuery("select l.login_type from Login l where l.id = :id");
+		query.setParameter("id", (long)1);
+		return query.getSingleResult().toString();
+	}
 
 }

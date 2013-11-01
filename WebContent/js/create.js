@@ -9,6 +9,7 @@ if(sessionStorage.loggedIn != "true" )
                 xhr.onreadystatechange=function() {
                 	  if (xhr.readyState==4) {
                 	   alert("Poll Number is: "+xhr.responseText);
+                	   $('#import').val("");
                 	  }
                 	 };
                 xhr.send(formData);                

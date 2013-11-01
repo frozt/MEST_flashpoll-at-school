@@ -47,9 +47,9 @@ public class PollServlet extends HttpServlet {
 	    	response.setCharacterEncoding("UTF-8");
 	    	String resp = "" ;
 	    	for(int i =0; i < activePolls.size() -1;i++) {
-	    		resp += activePolls.get(i).getId().toString() + ";"; 
+	    		resp += activePolls.get(i).getId().toString() +" - "+ activePolls.get(i).getTitle()+ ";"; 
 	    	}
-	    	resp += activePolls.get(activePolls.size() -1).getId().toString();
+	    	resp += activePolls.get(activePolls.size() -1).getId().toString() +" - "+ activePolls.get(activePolls.size() -1).getTitle();
 	    	response.getWriter().write(resp);
 	    	System.out.println("Response is :" +resp);
 	    }
@@ -67,11 +67,22 @@ public class PollServlet extends HttpServlet {
 	    		response.getWriter().write("exist");
 	    	}
 	    	else {
-	    		response.getWriter().write(pc.create(main.getQuestions(em, poll_id))); 
+	    		response.getWriter().write(pc.create(main.getQuestions(em, poll_id),main.getPollTitle(em, poll_id))); 
 			    System.out.println("Poll id is "+poll_id);
-			    System.out.println(pc.create(main.getQuestions(em, poll_id)));
+			    System.out.println(pc.create(main.getQuestions(em, poll_id),main.getPollTitle(em, poll_id)));
 	    	}
 		    
+	    }
+	    else if (request.getParameter("requestType").equals("loginType")) {
+	    	System.out.println("Login Type servlet started");
+	    	response.setContentType("text/html");  
+		    response.setCharacterEncoding("UTF-8");
+		    String login_type = main.getLoginType(em);
+		    if(!login_type.equals(null)) {
+		    	response.getWriter().write(login_type);
+		    }
+		    else
+		    	response.getWriter().write("email");
 	    }
 	    else {
 	    	System.out.println("Unknown request type");

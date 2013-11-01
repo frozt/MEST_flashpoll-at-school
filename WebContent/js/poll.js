@@ -53,8 +53,10 @@ $(document).ready(function() {
 			}
 		});
 		if (isFinalPage) {
-
-			var mail = localStorage.email;
+			if(sessionStorage.username)
+				var mail = sessionStorage.username;
+			else
+				var mail = localStorage.email;
 			var pollId = localStorage.poll_id;
 			var answers = results.join(";");
 			$.post('PollServlet', {

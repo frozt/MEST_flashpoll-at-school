@@ -22,13 +22,19 @@ $(document).ready(function() {
             }
         });
 			function saveUser() {
-				var mail=localStorage.email;
 				var gender = $('input[name=gender]').filter(':checked').val();
 				var age = $('#ageBox').val();
 				var occupation = $('#occupt').val();
-				$.post('UserServlet',{email:mail, gender:gender, age:age, occupation:occupation},function(data) {
-					//alert(data);
-				});
+				if(sessionStorage.loginType === "email") {
+					var mail=localStorage.email;
+					$.post('UserServlet',{loginType:sessionStorage.loginType,email:mail, gender:gender, age:age, occupation:occupation},function(data) {
+					});
+				}
+				else {
+					var username = sessionStorage.username;
+					$.post('UserServlet',{loginType:sessionStorage.loginType,username:username, gender:gender, age:age, occupation:occupation},function(data) {
+					});	
+				}
 				window.location = '#question1';				
 			}
 			
@@ -56,8 +62,10 @@ $(document).ready(function() {
                 }
             });
             if (isFinalPage) {
-
-                var mail=localStorage.email;
+            	if(sessionStorage.username)
+            		var mail=sessionStorage.username;
+            	else
+            		var mail=localStorage.email;
                 var pollId = localStorage.poll_id;
                 var answers = results.join(";");
                 $.post('PollServlet',{email:mail, pollId:pollId, answers:answers},function(data) {

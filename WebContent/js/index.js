@@ -3,23 +3,60 @@ $(document).ready(function() {
             	if(poll_id) {
             	    sessionStorage.poll_id = poll_id;
             	}
+            	if(localStorage.email) {           		
+            		$('#email').val(localStorage.email);
+            	}
+            	$.get('PollServlet',{requestType:"loginType"},function(responseText) { 
+                       if(responseText === "email") {
+                    	   $('#div-username').hide();
+                    	   sessionStorage.loginType = "email";
+                       }
+                       else if (responseText === "username") {
+                    	   $('#div-email').hide();  
+                    	   sessionStorage.loginType = "username";
+                       }
+                    	  
+                    });
+            	
                 $('#submit').click(function(event) {
-                	var mail = $('#email').val(); 
-                	if(validateEmail(mail)){
-                        $.get('UserServlet',{userType:"user",email:mail},function(responseText) { 
-                        	if(typeof(Storage)!=="undefined") {
-        			              localStorage.email=mail;
-        			        }
-                               if(responseText === "exist")
-                            	   window.location = 'poll.html';
-                               else
-                            	   window.location = 'default.html';   
-                            });
+                	if(sessionStorage.loginType === "email"){
+                		var mail = $('#email').val(); 
+                    	if(validateEmail(mail)){
+                            $.get('UserServlet',{loginType:"email",userType:"user",email:mail},function(responseText) { 
+                            	if(typeof(Storage)!=="undefined") {
+            			              localStorage.email=mail;
+            			        }
+                                   if(responseText === "exist")
+                                	   window.location = 'poll.html';
+                                   else if(responseText === "not exist")
+                                	   window.location = 'default.html';
+                                });
+                    	}
+                    	else {
+                    		alert("Please enter a valid email.");
+                    		$('#email').val('');
+                    	}
                 	}
                 	else {
-                		alert("Please enter a valid email.");
-                		$('#email').val('');
+                		var password = $('#password').val();
+                		var username = $('#username').val();
+                		$.get('UserServlet',{loginType:"username",userType:"user",username:username,password:password},function(responseText) { 
+	                        if(responseText === "login exist"){
+	                        	sessionStorage.username = username;
+	                       	   	window.location = 'poll.html';
+	                        }
+	                        else if(responseText === "login new") {
+	                        	sessionStorage.username = username;
+	                        	window.location = 'default.html';
+	                        }
+	                        else {
+                         	   alert("Wrong username or password!");
+                         	   $('#password').val('');
+                            }
+                        });
                 	}
+                	
+                	
                 });
             });
             function validateEmail(email) { 

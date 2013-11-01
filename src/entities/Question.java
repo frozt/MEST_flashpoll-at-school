@@ -50,7 +50,7 @@ public class Question implements Serializable{
 	public void setOptions(ArrayList<String> options) {
 		this.options = options;
 	}
-	public String toHtml ()
+	/*public String toHtml ()
 	{
 		String content;
 		content =" <div data-role=\"header\"><h1>FlashPoll</h1></div>" + " <div data-role=\"content\"> ";
@@ -62,6 +62,6 @@ public class Question implements Serializable{
         }
 		content += " </fieldset></div>";
 		return content;
-	}
+	}*/
 
 }
