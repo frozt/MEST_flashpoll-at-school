@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import business.Main;
+import business.PollLogger;
 import business.UserController;
 
 /**
@@ -39,9 +40,10 @@ public class UserServlet extends HttpServlet {
 	    UserController userCont = new UserController();
 	    Main main = new Main();
 	    
-	    response.setContentType("text");
+	    response.setContentType("text/html");  
+	    response.setCharacterEncoding("UTF-8");
 	    if(request.getParameter("userType").equals("user")) {
-	    	System.out.println("Login servlet started");
+	    	PollLogger.log("Login servlet started");
 	    	if(request.getParameter("loginType").equals("email")) {
 	    		if(main.checkEmail(em, request.getParameter("email")))
 			    	response.getWriter().write("exist");
@@ -71,6 +73,9 @@ public class UserServlet extends HttpServlet {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
 	    Main main = new Main();
+	    response.setContentType("text/html");  
+	    response.setCharacterEncoding("UTF-8");
+	    
 	    String loginType = request.getParameter("loginType");
 	    if(loginType.equals("email")) {
 	    	String email = request.getParameter("email");

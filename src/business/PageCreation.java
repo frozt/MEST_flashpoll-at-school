@@ -4,6 +4,8 @@ import java.util.List;
 import entities.*;
 
 public class PageCreation {
+	LanguageBundle language = new LanguageBundle();
+	
 	public String create(List<Question> questions, String title)
     {
         String page="";
@@ -123,14 +125,14 @@ public class PageCreation {
 	        {
 	        	buttons=" <fieldset class=\"ui-grid-a\">"
 	        			+"<div class=\"ui-block-a\"></div>"
-	                    +" <div class=\"ui-block-b\"><input type=\"button\" value=\"Next\" data-theme=\"b\" "
+	                    +" <div class=\"ui-block-b\"><input type=\"button\" value=\""+language.getMessage("Next")+"\" data-theme=\"b\" "
 	                    +next+ "></div></fieldset>";
 	        }
 	        else
 	        {
-	        	buttons=" <fieldset class=\"ui-grid-a\"><div class=\"ui-block-a\"><input type=\"button\" value=\"Previous\" data-theme=\"b\""
+	        	buttons=" <fieldset class=\"ui-grid-a\"><div class=\"ui-block-a\"><input type=\"button\" value=\""+language.getMessage("Previous")+"\" data-theme=\"b\""
                 +prev+" ></div> "
-                +" <div class=\"ui-block-b\"><input type=\"button\" value=\"Next\" data-theme=\"b\" "
+                +" <div class=\"ui-block-b\"><input type=\"button\" value=\""+language.getMessage("Next")+"\" data-theme=\"b\" "
                 +next+ "></div></fieldset>";
 	        }
 	        	
@@ -139,9 +141,9 @@ public class PageCreation {
 	    private String finalPage ()
 	    {
 	        String content=" <div data-role=\"page\" id=\"final\"><div data-role=\"header\"><h1>MEST</h1></div> "
-	                +" <div data-role=\"content\"><h1>Thank you for participation</h1>This is the end of survey."
-	                + " <br>Your results are submitted.<div id=\"feedback\"></div>"
-	                +"<fieldset class=\"ui-grid-a\"><div class=\"ui-block-a\"><input type=\"button\" value=\"Homepage\" data-theme=\"b\" "
+	                +" <div data-role=\"content\"><h1>"+language.getMessage("Thanks")+"</h1>"+language.getMessage("End")
+	                + " <br>"+language.getMessage("Submitted")+"<div id=\"feedback\"></div>"
+	                +"<fieldset class=\"ui-grid-a\"><div class=\"ui-block-a\"><input type=\"button\" value=\""+language.getMessage("Homepage")+"\" data-theme=\"b\" "
 	                +" onclick=\"window.location = 'poll.html'; \"></div></fieldset></div></div>";
 	        return content;
 	    }

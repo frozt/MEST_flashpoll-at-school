@@ -67,16 +67,16 @@ public class Main {
 		try{
 			if(em.find(entities.User.class, email) != null)
 			{
-				System.out.println("user exist");
+				PollLogger.log("user exist");
 				return true;
 			}
 			else
 			{
-				System.out.println("user doesnt exist");
+				PollLogger.log("user doesnt exist");
 				return false;
 			}
 		}catch (IllegalArgumentException e) {
-			System.out.println(e.toString());
+			PollLogger.log("checkmail function exception "+ e.toString());
 			return false;
 		}
 
@@ -100,26 +100,27 @@ public class Main {
 	public boolean insertUser(EntityManager em, String email, String gender, String occupation, int age)
 	{
 		
-		System.out.println("insertUser started");
+		PollLogger.log("insertUser started");
 		entities.User user = new entities.User();
 		user.setEmail(email);
 		user.setGender(gender);
 		user.setOccupation(occupation);
 		user.setAge(age);
 		em.getTransaction().begin();
-		System.out.println("transaction started");
 		try {
 			em.persist(user);
 			em.getTransaction().commit();
 		}catch (Exception e){
-			System.out.println(e.toString());
+			PollLogger.log("insertUser function exception "+e.toString());
 			return false;
 		}		
 		
-		System.out.println("Successful user insert with "+email+" "+age);
+		PollLogger.log("Successful user insert with "+email+" "+age);
 		return true;
 	}
 	public boolean updateUser (EntityManager em, String username, String gender, String occupation, int age) {
+		PollLogger.log("updateUser started");
+		
 		Query query = em.createQuery("select u from User u where u.username = :username");
 		query.setParameter("username", username);
 		entities.User user;
@@ -134,36 +135,36 @@ public class Main {
 		user.setGender(gender);
 		user.setOccupation(occupation);
 		em.getTransaction().begin();
-		System.out.println("transaction started");
 		try {
 			em.merge(user);
 			em.getTransaction().commit();
 		}catch (Exception e){
-			System.out.println(e.toString());
+			PollLogger.log("updateUser function "+ e.toString());
 			return false;
 		}
 		return true;
 	}
 	public boolean insertAnswers(EntityManager em, String user_email, Long poll_id, String answers)
 	{
+		PollLogger.log("insertAnswers started");
 		entities.Answers answ = new entities.Answers();
 		answ.setPoll_id(poll_id);
 		answ.setUser_email(user_email);
 		answ.setAnswers(answers);
 		
 		em.getTransaction().begin();
-		System.out.println("transaction started");
 		try {
 			em.persist(answ);
 			em.getTransaction().commit();
 		}catch (Exception e){
-			System.out.println(e.toString());
+			PollLogger.log("insertAnswers exception "+e.toString());
 			return false;
 		}
 		return true;
 	}
 	public long insertPoll(EntityManager em, String pollXml) throws URISyntaxException
 	{
+		PollLogger.log("insertPoll started");
 		if(validateXml(pollXml))
 		{
 			parseXml(em, pollXml);
@@ -187,20 +188,9 @@ public class Main {
 	private boolean validateXml(String pollXml) throws URISyntaxException {
 		Source schemaFile = new StreamSource(new File("schema.xsd"));
         //Source xmlFile = new StreamSource(new File("../src/poll.xml"));
-		//System.out.println(String.class.getResource("/schema.xsd").getPath());
+		//PollLogger.log(String.class.getResource("/schema.xsd").getPath());
 		//Source schemaFile = new StreamSource(new File(String.class.getResource("/schema.xsd").getPath()));
-		URL url = ClassLoader.getSystemResource("/schema.xsd");
-		System.out.println("-------------------------------");
-		if(url == null) {
-			System.out.println("Url is null");
-		}
-		else {
-		System.out.println(url.toString());
-		System.out.println(url.getPath());
-		System.out.println(url.toURI());
-		}
-		
-		
+
         StringReader reader = new StringReader(pollXml);
         Source xmlFile = new javax.xml.transform.stream.StreamSource(reader);
         
@@ -210,18 +200,18 @@ public class Main {
             Schema schema = schemaFactory.newSchema(schemaFile);
             Validator validator = schema.newValidator();
             validator.validate(xmlFile);
-            System.out.println(xmlFile.getSystemId() + " is valid");
+            PollLogger.log(xmlFile.getSystemId() + " is valid");
         }
         catch (SAXException e) 
         {
-            System.out.println(xmlFile.getSystemId() + " is NT valid");
-            System.out.println("Reason: " + e.getLocalizedMessage());
+            PollLogger.log(xmlFile.getSystemId() + " is NT valid");
+            PollLogger.log("Reason: " + e.getLocalizedMessage());
             return false;
         }
         catch (Exception e) 
         {
-            System.out.println(xmlFile.getSystemId() + " is NOT valid");
-            System.out.println("Reason: " + e.getLocalizedMessage());
+            PollLogger.log(xmlFile.getSystemId() + " is NOT valid");
+            PollLogger.log("Reason: " + e.getLocalizedMessage());
             return false;
         }
         return true;
@@ -229,6 +219,7 @@ public class Main {
 	private void parseXml(EntityManager em, String pollXml)
 	{
 		try {
+			PollLogger.log("parseXml started");
 
 	        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -236,7 +227,6 @@ public class Main {
 	     
 	        doc.getDocumentElement().normalize();
 	     
-	        System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 	        
 	        // parse feedback info elements
 	        NodeList feedback = doc.getElementsByTagName("user_feedback");
@@ -259,12 +249,11 @@ public class Main {
             poll.setTitle(titleStr);
             
             em.getTransaction().begin();
-    		System.out.println("transaction started");
     		try {
     			em.persist(poll);
     			em.getTransaction().commit();
     		}catch (Exception e){
-    			System.out.println(e.toString());
+    			PollLogger.log("ParseXml poll insert exception "+e.toString());
     		}
     		// parse question elements
     		NodeList nList = doc.getElementsByTagName("question");
@@ -273,25 +262,25 @@ public class Main {
 	     
 	            Node nNode = nList.item(temp);
 	     
-	            System.out.println("\nCurrent Element :" + nNode.getNodeName());
+	            PollLogger.log("\nCurrent Element :" + nNode.getNodeName());
 	     
 	            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 	     
 	                Element eElement = (Element) nNode;
 	                
 	        		Question question = new Question();
-	                System.out.println("Text : " + eElement.getElementsByTagName("text").item(0).getTextContent());
+	                PollLogger.log("Text : " + eElement.getElementsByTagName("text").item(0).getTextContent());
 	                question.setText(eElement.getElementsByTagName("text").item(0).getTextContent());
-	                System.out.println("Type : " + eElement.getElementsByTagName("type").item(0).getTextContent());
+	                PollLogger.log("Type : " + eElement.getElementsByTagName("type").item(0).getTextContent());
 	                question.setType(eElement.getElementsByTagName("type").item(0).getTextContent());
-	                System.out.println("Number : " + eElement.getElementsByTagName("number").item(0).getTextContent());
+	                PollLogger.log("Number : " + eElement.getElementsByTagName("number").item(0).getTextContent());
 	                question.setNumber(Integer.parseInt(eElement.getElementsByTagName("number").item(0).getTextContent()));
 	                if(eElement.getElementsByTagName("options").getLength() > 0)
 	                {
 	                	ArrayList<String> options = new ArrayList<String>();
 	                	for(int i=0; i< eElement.getElementsByTagName("options").getLength(); i++)
 	                	{
-	                		System.out.println("Options : " + eElement.getElementsByTagName("options").item(i).getTextContent());
+	                		PollLogger.log("Options : " + eElement.getElementsByTagName("options").item(i).getTextContent());
 	                		options.add(eElement.getElementsByTagName("options").item(i).getTextContent());
 	                	}
 	                	question.setOptions(options);
@@ -304,13 +293,13 @@ public class Main {
 	        			em.persist(question);
 	        			em.getTransaction().commit();
 	        		}catch (Exception e){
-	        			System.out.println(e.toString());
+	        			PollLogger.log("xml parsing exception "+e.toString());
 	        		}
 	     
 	            }
 	        }
 	        } catch (Exception e) {
-	        e.printStackTrace();
+	        	PollLogger.log("parseXml function exception "+e.toString());
 	        }
 	}
 	public List<entities.Poll> getActivePolls (EntityManager em)

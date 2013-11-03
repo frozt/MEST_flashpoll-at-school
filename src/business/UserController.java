@@ -16,21 +16,21 @@ public class UserController {
 			{
 				entities.Admin ad = (Admin) query.getSingleResult();
 				if(ad.isStatus()) {
-					System.out.println("user exist");
+					PollLogger.log("user exist");
 					return true;
 				}
 				else {
-					System.out.println("admin is not active");
+					PollLogger.log("admin is not active");
 					return false;
 				}
 			}
 			else
 			{
-				System.out.println("admin not found");
+				PollLogger.log("admin not found");
 				return false;
 			}
 		}catch (IllegalArgumentException e) {
-			System.out.println(e.toString());
+			PollLogger.log("checkAdmin function exception "+e.toString());
 			return false;
 		}
 	}

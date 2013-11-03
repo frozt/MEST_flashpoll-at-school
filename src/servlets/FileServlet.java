@@ -23,6 +23,7 @@ import org.apache.commons.fileupload.FileItem;
 import com.google.gson.*;
 
 import business.Main;
+import business.PollLogger;
 
 /**
  * Servlet implementation class UploadServlet
@@ -47,6 +48,8 @@ public class FileServlet extends HttpServlet {
 	    EntityManager em = factory.createEntityManager();
 	    Main main = new Main();
 
+	    response.setContentType("text/html");  
+	    response.setCharacterEncoding("UTF-8");
 	    Long poll_id = Long.parseLong(request.getParameter("pollId"));
 	    List<entities.Answers> answers = main.getPollAnswers(em, poll_id);
 	    String results = "";
@@ -66,14 +69,15 @@ public class FileServlet extends HttpServlet {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
 	    Main main = new Main();
+	    response.setContentType("text/html");  
+	    response.setCharacterEncoding("UTF-8");
 		try {
-			System.out.println("post started");
+			PollLogger.log("FileServlet post started.");
             List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
             for (FileItem item : items) {
                     String filename = item.getName();
-                    System.out.println(filename);
+                    PollLogger.log(filename + " selected");
                     String xml = item.getString();
-                    System.out.println(xml);
                     response.setContentType("text");
 
                     long poll_id = main.insertPoll(em, xml);                    
@@ -81,10 +85,11 @@ public class FileServlet extends HttpServlet {
                     	response.getWriter().write(""+poll_id);
                     else
                     	response.getWriter().write("Error inserting poll");
-                    System.out.println("Poll id is:" + poll_id);
+                    PollLogger.log("New Poll id is:" + poll_id);
                 
             }
         } catch (FileUploadException | URISyntaxException e) {
+        	PollLogger.log("Parsing file upload failed." + e.toString());
             throw new ServletException("Parsing file upload failed.", e);
         }
 		em.close();

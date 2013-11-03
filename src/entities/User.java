@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.*;
 
@@ -22,6 +23,8 @@ public class User implements Serializable {
 	private String gender;
 	private int age;
 	private String occupation;
+	@Version
+	private Timestamp create_date;
 
 	public User() {
 		super();

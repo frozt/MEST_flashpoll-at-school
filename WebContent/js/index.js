@@ -33,7 +33,7 @@ $(document).ready(function() {
                                 });
                     	}
                     	else {
-                    		alert("Please enter a valid email.");
+                    		alert("Ange en giltig e-postadress.");
                     		$('#email').val('');
                     	}
                 	}
@@ -50,7 +50,7 @@ $(document).ready(function() {
 	                        	window.location = 'default.html';
 	                        }
 	                        else {
-                         	   alert("Wrong username or password!");
+                         	   alert("Fel användarnamn eller lösenord!");
                          	   $('#password').val('');
                             }
                         });

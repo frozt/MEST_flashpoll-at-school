@@ -1,5 +1,6 @@
 package entities;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.persistence.*;
@@ -16,6 +17,8 @@ public class Question implements Serializable{
     private int number;
     private long poll_id;
     private ArrayList<String> options;
+    @Version
+	private Timestamp create_date;
     
 	public Long getId() {
 		return id;

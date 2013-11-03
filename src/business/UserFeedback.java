@@ -13,11 +13,12 @@ public class UserFeedback {
 		String feedback="";
 		Query query = em.createQuery("select p from Poll p where p.id = :pollId");
 		query.setParameter("pollId", poll_id);
+		LanguageBundle language = new LanguageBundle();
 		Poll poll = (Poll) query.getSingleResult();
 		for(String info: poll.getFeedback_info()) {
 			switch (info) {
 			case "total respondent":
-				feedback +="You are respondent number: " + totalRespondent(em, poll_id);
+				feedback +=language.getMessage("TotalRespondent")+": " + totalRespondent(em, poll_id);
 				break;
 
 			default:

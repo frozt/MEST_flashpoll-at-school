@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.persistence.*;
@@ -20,6 +21,8 @@ public class Answers implements Serializable {
 	private String user_email;
 	private Long poll_id;
 	private String answers;
+	@Version
+	private Timestamp create_date;
 
 	public Answers() {
 		super();
@@ -52,5 +55,6 @@ public class Answers implements Serializable {
 	public void setAnswers(String answers) {
 		this.answers = answers;
 	}
+
    
 }

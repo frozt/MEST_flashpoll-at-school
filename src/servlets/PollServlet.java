@@ -41,11 +41,12 @@ public class PollServlet extends HttpServlet {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
 	    Main main = new Main();
+	    response.setContentType("text/html");  
+	    response.setCharacterEncoding("UTF-8");
 	    switch (request.getParameter("requestType").toString()) {
 	    case "activePolls":
+	    	PollLogger.log("Active Poll servlet started");
 	    	List<entities.Poll> activePolls = main.getActivePolls(em);
-	    	response.setContentType("text");
-	    	response.setCharacterEncoding("UTF-8");
 	    	String resp = "" ;
 	    	for(int i =0; i < activePolls.size() -1;i++) {
 	    		resp += activePolls.get(i).getId().toString() +" - "+ activePolls.get(i).getTitle()+ ";"; 
@@ -55,12 +56,10 @@ public class PollServlet extends HttpServlet {
 	    	System.out.println("Response is :" +resp);
 	    	break;
 	    case "createPoll":
-	    	System.out.println("Create poll started");
+	    	PollLogger.log("Create poll started");
 			business.PageCreation pc = new business.PageCreation();
 		    long poll_id =Long.parseLong(request.getParameter("poll"));
 		    String user_email = request.getParameter("email");
-		    response.setContentType("text/html");  
-		    response.setCharacterEncoding("UTF-8");
 		    
 		    UserController userCont = new UserController();
 	    	if(!userCont.checkUserAnswers(em, user_email, poll_id)){
@@ -68,14 +67,11 @@ public class PollServlet extends HttpServlet {
 	    	}
 	    	else {
 	    		response.getWriter().write(pc.create(main.getQuestions(em, poll_id),main.getPollTitle(em, poll_id))); 
-			    System.out.println("Poll id is "+poll_id);
-			    System.out.println(pc.create(main.getQuestions(em, poll_id),main.getPollTitle(em, poll_id)));
+	    		PollLogger.log("Poll id is "+poll_id);
 	    	}
 	    	break;
 	    case "loginType":
-	    	System.out.println("Login Type servlet started");
-	    	response.setContentType("text/html");  
-		    response.setCharacterEncoding("UTF-8");
+	    	PollLogger.log("Login Type servlet started");
 		    String login_type = main.getLoginType(em);
 		    if(!login_type.equals(null)) {
 		    	response.getWriter().write(login_type);
@@ -85,15 +81,11 @@ public class PollServlet extends HttpServlet {
 		    break;
 	    case "deactivatePoll":
 	    	PollLogger.log("Deactivate Poll Servlet started.");
-	    	response.setContentType("text/html");  
-		    response.setCharacterEncoding("UTF-8");
 		    poll_id = Long.parseLong(request.getParameter("pollId").toString().split("-")[0].trim());
 		    main.setPollStatus(em, poll_id, false);
 	    	break;
 	    case "deletePoll":
 	    	PollLogger.log("Delete Poll Servlet started.");
-	    	response.setContentType("text/html");  
-		    response.setCharacterEncoding("UTF-8");
 		    poll_id = Long.parseLong(request.getParameter("pollId").toString().split("-")[0].trim());
 		    main.deletePoll(em, poll_id);
 	    	break;
@@ -114,14 +106,15 @@ public class PollServlet extends HttpServlet {
 	    EntityManager em = factory.createEntityManager();
 	    Main main = new Main();
 	    
+	    response.setContentType("text/html");  
+	    response.setCharacterEncoding("UTF-8");
 	    String email = request.getParameter("email");
 		Long pollId = Long.parseLong((request.getParameter("pollId")));
 		String answers = request.getParameter("answers");
-		System.out.println("Insert answer servlet started");
+		PollLogger.log("Insert answer servlet started.");
 		if(main.insertAnswers(em, email, pollId, answers)) {
 			UserFeedback ufeed = new UserFeedback();
 			response.getWriter().write(ufeed.addUserFeedback(em, pollId));
-			System.out.println(response);
 		}
 			
 		else

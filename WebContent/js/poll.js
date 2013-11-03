@@ -9,7 +9,7 @@ $(document).ready(function() {
 					email : localStorage.email
 				}, function(responseText) {
 					if(responseText === "exist") {
-						alert("You already responded this poll. You can attend each poll once.");
+						alert("Du svarade redan denna enkät. Du kan delta i varje omröstning gång.");
 						window.location = 'poll.html';
 					}
 					else {
@@ -86,7 +86,7 @@ $(document).ready(function() {
 
 	function minValueCheck(value) {
 		if (value < 1 || isNaN(value)) {
-			alert("Please enter a valid number");
+			alert("Ange ett giltigt nummer");
 			$('#poll_id').val('');
 			return false;
 		}

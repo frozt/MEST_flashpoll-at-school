@@ -1,6 +1,8 @@
 package entities;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
 import javax.persistence.*;
 
 /**
@@ -17,6 +19,8 @@ public class Admin implements Serializable {
 	private String password;
 	private int accessLevel;
 	private boolean status;
+	@Version
+	private Timestamp create_date;
 
 	public Admin() {
 		super();

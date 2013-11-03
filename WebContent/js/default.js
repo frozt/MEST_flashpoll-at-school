@@ -12,7 +12,7 @@ $(document).ready(function() {
                     window.location = '#gender';
             	}
             	else {
-            		alert("Please enter a valid number");
+            		alert("Ange ett giltigt nummer.");
                     $('#poll_id').val('');
             	}
             });         
@@ -91,7 +91,7 @@ $(document).ready(function() {
         }
         function ageCheck () {
         	if(!numberCheck($('#ageBox').val())) {
-        		alert("Enter a valid number.");
+        		alert("Ange ett giltigt nummer.");
         		$('#ageBox').val('');
         	}
         }

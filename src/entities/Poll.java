@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.persistence.*;
@@ -21,6 +22,8 @@ public class Poll implements Serializable {
 	private Long owner_id;
 	private boolean status;
 	private ArrayList<String> feedback_info;
+	@Version
+	private Timestamp create_date;
 	
 
 	public Poll() {
