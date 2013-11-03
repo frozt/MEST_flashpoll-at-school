@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.*;
 
 import business.Main;
+import business.PollLogger;
 import business.UserController;
 import business.UserFeedback;
 
@@ -40,8 +41,8 @@ public class PollServlet extends HttpServlet {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("flashpoll");
 	    EntityManager em = factory.createEntityManager();
 	    Main main = new Main();
-	    
-	    if(request.getParameter("requestType").equals("activePolls")) {
+	    switch (request.getParameter("requestType").toString()) {
+	    case "activePolls":
 	    	List<entities.Poll> activePolls = main.getActivePolls(em);
 	    	response.setContentType("text");
 	    	response.setCharacterEncoding("UTF-8");
@@ -52,10 +53,9 @@ public class PollServlet extends HttpServlet {
 	    	resp += activePolls.get(activePolls.size() -1).getId().toString() +" - "+ activePolls.get(activePolls.size() -1).getTitle();
 	    	response.getWriter().write(resp);
 	    	System.out.println("Response is :" +resp);
-	    }
-	    else if (request.getParameter("requestType").equals("createPoll")){
+	    	break;
+	    case "createPoll":
 	    	System.out.println("Create poll started");
-
 			business.PageCreation pc = new business.PageCreation();
 		    long poll_id =Long.parseLong(request.getParameter("poll"));
 		    String user_email = request.getParameter("email");
@@ -71,9 +71,8 @@ public class PollServlet extends HttpServlet {
 			    System.out.println("Poll id is "+poll_id);
 			    System.out.println(pc.create(main.getQuestions(em, poll_id),main.getPollTitle(em, poll_id)));
 	    	}
-		    
-	    }
-	    else if (request.getParameter("requestType").equals("loginType")) {
+	    	break;
+	    case "loginType":
 	    	System.out.println("Login Type servlet started");
 	    	response.setContentType("text/html");  
 		    response.setCharacterEncoding("UTF-8");
@@ -83,9 +82,24 @@ public class PollServlet extends HttpServlet {
 		    }
 		    else
 		    	response.getWriter().write("email");
-	    }
-	    else {
-	    	System.out.println("Unknown request type");
+		    break;
+	    case "deactivatePoll":
+	    	PollLogger.log("Deactivate Poll Servlet started.");
+	    	response.setContentType("text/html");  
+		    response.setCharacterEncoding("UTF-8");
+		    poll_id = Long.parseLong(request.getParameter("pollId").toString().split("-")[0].trim());
+		    main.setPollStatus(em, poll_id, false);
+	    	break;
+	    case "deletePoll":
+	    	PollLogger.log("Delete Poll Servlet started.");
+	    	response.setContentType("text/html");  
+		    response.setCharacterEncoding("UTF-8");
+		    poll_id = Long.parseLong(request.getParameter("pollId").toString().split("-")[0].trim());
+		    main.deletePoll(em, poll_id);
+	    	break;
+	    	default :
+	    		System.out.println("Unknown request type");
+	    		break;
 	    }
 	    
 	    em.close();

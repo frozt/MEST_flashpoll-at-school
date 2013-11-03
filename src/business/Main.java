@@ -172,6 +172,18 @@ public class Main {
 			return -1;
 		return getLastPollId(em);
 	}
+	public void setPollStatus (EntityManager em, long poll_id,boolean status) {
+		Poll poll = em.find(entities.Poll.class, poll_id);
+		em.getTransaction().begin();
+		poll.setStatus(status);
+		em.getTransaction().commit();
+	}
+	public void deletePoll (EntityManager em, long poll_id) {
+		Poll poll = em.find(entities.Poll.class, poll_id);
+		em.getTransaction().begin();
+		em.remove(poll);
+		em.getTransaction().commit();
+	}
 	private boolean validateXml(String pollXml) throws URISyntaxException {
 		Source schemaFile = new StreamSource(new File("schema.xsd"));
         //Source xmlFile = new StreamSource(new File("../src/poll.xml"));
