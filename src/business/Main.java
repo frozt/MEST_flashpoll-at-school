@@ -82,9 +82,10 @@ public class Main {
 
 	}
 	public String checkLogin (EntityManager em, String username, String password) {
-		Query query = em.createQuery("select u from User u where u.username = :username and u.password=:password");
+	//	Query query = em.createQuery("select u from User u where u.username = :username and u.password=:password");
+		Query query = em.createQuery("select u from User u where u.username = :username");
 		query.setParameter("username", username);
-		query.setParameter("password", password);
+	//	query.setParameter("password", password);
 		
 		try {
 			User user = (User) query.getSingleResult();

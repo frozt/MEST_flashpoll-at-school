@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_40">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_45">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="/home/ahmet/java/libs/eclipselink/jlib/eclipselink.jar"/>
-	<classpathentry kind="lib" path="/home/ahmet/java/libs/eclipselink/jlib/jpa/javax.persistence_2.1.0.v201304241213.jar"/>
-	<classpathentry kind="lib" path="/home/ahmet/java/libs/javax.servlet-3.1.jar"/>
+	<classpathentry kind="lib" path="/home/ahmet/java/eclipselink/jlib/eclipselink.jar"/>
+	<classpathentry kind="lib" path="/home/ahmet/java/eclipselink/jlib/jpa/javax.persistence_2.1.0.v201304241213.jar"/>
+	<classpathentry kind="lib" path="/home/ahmet/java/javax.servlet-3.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

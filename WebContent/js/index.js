@@ -1,3 +1,18 @@
+$('#div-email').hide();
+$('#div-username').hide();
+$.get('PollServlet',{requestType:"loginType"},function(responseText) { 
+                       if(responseText === "email") { 
+                    	   $('#div-username').hide();
+                    	   $('#div-email').show();
+                    	   sessionStorage.loginType = "email";
+                       }
+                       else if (responseText === "username") { 
+                    	   $('#div-email').hide(); 
+                    	   $('#div-username').show;
+                    	   sessionStorage.loginType = "username";
+                       }
+                    	  
+                    });
 $(document).ready(function() {
             	var poll_id = getQueryVariable("id");
             	if(poll_id) {
@@ -6,17 +21,18 @@ $(document).ready(function() {
             	if(localStorage.email) {           		
             		$('#email').val(localStorage.email);
             	}
-            	$.get('PollServlet',{requestType:"loginType"},function(responseText) { 
-                       if(responseText === "email") {
+            	
+                       if(sessionStorage.loginType === "email") { 
                     	   $('#div-username').hide();
+                    	   $('#div-email').show();
                     	   sessionStorage.loginType = "email";
                        }
-                       else if (responseText === "username") {
-                    	   $('#div-email').hide();  
+                       else if (sessionStorage.loginType === "username") { 
+                    	   $('#div-email').hide(); 
+                    	   $('#div-username').show;
                     	   sessionStorage.loginType = "username";
                        }
-                    	  
-                    });
+                
             	
                 $('#submit').click(function(event) {
                 	if(sessionStorage.loginType === "email"){
@@ -38,7 +54,8 @@ $(document).ready(function() {
                     	}
                 	}
                 	else {
-                		var password = $('#password').val();
+                		//var password = $('#password').val();
+                		var password;
                 		var username = $('#username').val();
                 		$.get('UserServlet',{loginType:"username",userType:"user",username:username,password:password},function(responseText) { 
 	                        if(responseText === "login exist"){
