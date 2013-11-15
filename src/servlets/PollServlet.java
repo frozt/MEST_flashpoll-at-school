@@ -62,13 +62,17 @@ public class PollServlet extends HttpServlet {
 		    String user_email = request.getParameter("email");
 		    
 		    UserController userCont = new UserController();
-	    	if(!userCont.checkUserAnswers(em, user_email, poll_id)){
-	    		response.getWriter().write("exist");
-	    	}
-	    	else {
-	    		response.getWriter().write(pc.create(main.getQuestions(em, poll_id),main.getPollTitle(em, poll_id))); 
-	    		PollLogger.log("Poll id is "+poll_id);
-	    	}
+		    if(main.checkPollId(em, poll_id)) {
+		    	if(!userCont.checkUserAnswers(em, user_email, poll_id)){
+		    		response.getWriter().write("exist");
+		    	}
+		    	else {
+		    		response.getWriter().write(pc.create(main.getQuestions(em, poll_id),main.getPollTitle(em, poll_id))); 
+		    		PollLogger.log("Poll id is "+poll_id);
+		    	}
+		    }
+		    else 
+		    	response.getWriter().write("invalid poll");
 	    	break;
 	    case "loginType":
 	    	PollLogger.log("Login Type servlet started");

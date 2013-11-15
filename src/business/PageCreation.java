@@ -74,7 +74,8 @@ public class PageCreation {
 	    private String slide(entities.Question q, int totalQuestion)
 	    {
 	        String content = " <form><label for=\"slider\"><strong>"+q.getText()+"</strong></label>";
-	        content += "<input type=\"range\" class=\"ranger\" name=\"slider\" id=\"slider\" data-highlight=\"true\" "
+	        content += "<input type=\"range\" class=\"ranger\" name=\"slider\" id=\"slider\" value=\""
+	        		+q.getOptions().get(0)+"\" data-highlight=\"true\" "
 	                + "min=\""+ q.getOptions().get(0)+ "\" "
 	                + "max=\"" +q.getOptions().get(1) +"\">";
 	        content += " <label class=\"slider_min\" for=\"slider\">"+ q.getOptions().get(2)+"</label> "

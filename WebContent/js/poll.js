@@ -12,6 +12,10 @@ $(document).ready(function() {
 						alert("Du svarade redan denna enkät. Du kan delta i varje omröstning gång.");
 						window.location = 'poll.html';
 					}
+					else if (responseText === "invalid poll") {
+						alert("Ogiltig Poll ID");
+						window.location = 'poll.html';
+					}
 					else {
 						$(responseText).insertAfter('#question');
 						if (typeof (Storage) !== "undefined") {

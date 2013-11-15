@@ -92,7 +92,7 @@ public class UserServlet extends HttpServlet {
 			String gender = request.getParameter("gender");
 			String occupation = request.getParameter("occupation");
 			int age = Integer.parseInt(request.getParameter("age"));
-			if(main.updateUser(em, username, gender, occupation, age))
+			if(main.insertUserWithUsername(em, username, gender, occupation, age))
 				response.getWriter().write("success");
 			else
 				response.getWriter().write("fail");

@@ -4,6 +4,11 @@ $(document).ready(function() {
             	if(numberCheck(pollId)) {
             		var createPoll = "createPoll";
                     $.get('PollServlet',{poll:pollId,requestType:createPoll},function(responseText) { 
+                    	if (responseText === "invalid poll") {
+    						alert("Ogiltig Poll ID");
+    						window.location = 'default.html';
+    					}
+                    	else
                            $(responseText).insertAfter('#occupation');
                         });
                     if(typeof(Storage)!=="undefined") {

@@ -44,7 +44,21 @@ public class Main {
 	public Main() {
 		
 	}
-
+	public boolean checkPollId (EntityManager em, long poll_id) {
+		Query query = em.createQuery("select p from Poll p where p.id = :poll_id and p.status =:status");
+		query.setParameter("poll_id", poll_id);
+		query.setParameter("status", true);
+		try {
+			Poll poll = (Poll) query.getSingleResult();
+			return true;
+		}
+		catch(NoResultException e) {
+			return false;
+		}
+		catch(NullPointerException n) {
+			return false;
+		}
+	}
 	public  List<Question> getQuestions(EntityManager em, long poll_id)
 	{
 		Query query = em.createQuery("select q from Question q where q.poll_id = :poll_id");
@@ -95,7 +109,7 @@ public class Main {
 				return "login exist";
 		}
 		catch(NoResultException e) {
-			return "login fail";
+			return "login new";
 		}
 	}
 	public boolean insertUser(EntityManager em, String email, String gender, String occupation, int age)
@@ -117,6 +131,27 @@ public class Main {
 		}		
 		
 		PollLogger.log("Successful user insert with "+email+" "+age);
+		return true;
+	}
+	public boolean insertUserWithUsername(EntityManager em, String username, String gender, String occupation, int age)
+	{
+		
+		PollLogger.log("insertUser started");
+		entities.User user = new entities.User();
+		user.setUsername(username);
+		user.setGender(gender);
+		user.setOccupation(occupation);
+		user.setAge(age);
+		em.getTransaction().begin();
+		try {
+			em.persist(user);
+			em.getTransaction().commit();
+		}catch (Exception e){
+			PollLogger.log("insertUser function exception "+e.toString());
+			return false;
+		}		
+		
+		PollLogger.log("Successful user insert with "+username+" "+age);
 		return true;
 	}
 	public boolean updateUser (EntityManager em, String username, String gender, String occupation, int age) {
