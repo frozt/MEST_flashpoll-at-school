@@ -59,7 +59,7 @@ public class PageCreation {
 	    }
 	    private String multiple(entities.Question q, int totalQuestion)
 	    {
-	        String content = " <fieldset data-role=\"controlgroup\"> <legend><strong>"+q.getText()+"</strong><br> (You can select more than one answer) </legend> ";
+	        String content = " <fieldset data-role=\"controlgroup\"> <legend><strong>"+q.getText()+"</strong></legend> ";
 	        for(int i=0;i<q.getOptions().size();i++)
 	        {
 	            content += " <input type=\"checkbox\" class=\"answers\" name=\"multiSelection"+i+"\" id=\"multiSelection"+i+" \" ><label for=\"multiSelection"+i+" \">"
@@ -74,8 +74,7 @@ public class PageCreation {
 	    private String slide(entities.Question q, int totalQuestion)
 	    {
 	        String content = " <form><label for=\"slider\"><strong>"+q.getText()+"</strong></label>";
-	        content += "<input type=\"range\" class=\"ranger\" name=\"slider\" id=\"slider\" value=\""
-	        		+q.getOptions().get(0)+"\" data-highlight=\"true\" "
+	        content += "<input type=\"range\" class=\"ranger\" name=\"slider\" id=\"slider\" data-highlight=\"true\" "
 	                + "min=\""+ q.getOptions().get(0)+ "\" "
 	                + "max=\"" +q.getOptions().get(1) +"\">";
 	        content += " <label class=\"slider_min\" for=\"slider\">"+ q.getOptions().get(2)+"</label> "

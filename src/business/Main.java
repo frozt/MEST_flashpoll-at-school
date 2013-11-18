@@ -112,14 +112,13 @@ public class Main {
 			return "login new";
 		}
 	}
-	public boolean insertUser(EntityManager em, String email, String gender, String occupation, int age)
+	public boolean insertUser(EntityManager em, String email, String gender, int age)
 	{
 		
 		PollLogger.log("insertUser started");
 		entities.User user = new entities.User();
 		user.setEmail(email);
 		user.setGender(gender);
-		user.setOccupation(occupation);
 		user.setAge(age);
 		em.getTransaction().begin();
 		try {
@@ -133,14 +132,13 @@ public class Main {
 		PollLogger.log("Successful user insert with "+email+" "+age);
 		return true;
 	}
-	public boolean insertUserWithUsername(EntityManager em, String username, String gender, String occupation, int age)
+	public boolean insertUserWithUsername(EntityManager em, String username, String gender, int age)
 	{
 		
 		PollLogger.log("insertUser started");
 		entities.User user = new entities.User();
 		user.setUsername(username);
 		user.setGender(gender);
-		user.setOccupation(occupation);
 		user.setAge(age);
 		em.getTransaction().begin();
 		try {
@@ -154,7 +152,7 @@ public class Main {
 		PollLogger.log("Successful user insert with "+username+" "+age);
 		return true;
 	}
-	public boolean updateUser (EntityManager em, String username, String gender, String occupation, int age) {
+	public boolean updateUser (EntityManager em, String username, String gender, int age) {
 		PollLogger.log("updateUser started");
 		
 		Query query = em.createQuery("select u from User u where u.username = :username");
@@ -169,7 +167,6 @@ public class Main {
 		
 		user.setAge(age);
 		user.setGender(gender);
-		user.setOccupation(occupation);
 		em.getTransaction().begin();
 		try {
 			em.merge(user);

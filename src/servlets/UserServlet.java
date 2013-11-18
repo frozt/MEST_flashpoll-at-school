@@ -80,9 +80,8 @@ public class UserServlet extends HttpServlet {
 	    if(loginType.equals("email")) {
 	    	String email = request.getParameter("email");
 			String gender = request.getParameter("gender");
-			String occupation = request.getParameter("occupation");
 			int age = Integer.parseInt(request.getParameter("age"));
-			if(main.insertUser(em, email, gender, occupation, age))
+			if(main.insertUser(em, email, gender, age))
 				response.getWriter().write("success");
 			else
 				response.getWriter().write("fail");
@@ -90,9 +89,8 @@ public class UserServlet extends HttpServlet {
 	    else {
 	    	String username = request.getParameter("username");
 			String gender = request.getParameter("gender");
-			String occupation = request.getParameter("occupation");
 			int age = Integer.parseInt(request.getParameter("age"));
-			if(main.insertUserWithUsername(em, username, gender, occupation, age))
+			if(main.insertUserWithUsername(em, username, gender, age))
 				response.getWriter().write("success");
 			else
 				response.getWriter().write("fail");

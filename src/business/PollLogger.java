@@ -13,7 +13,8 @@ public class PollLogger {
 		try {  
             
             // This block configure the logger with handler and formatter  
-            fh = new FileHandler("/home/ahmet/mest_log/poll_logfile.log");  
+            fh = new FileHandler("/home/ahmet/mest_log/poll_logfile.log",2048000,3);  
+            
             logger.addHandler(fh);  
             //logger.setLevel(Level.ALL);  
             SimpleFormatter formatter = new SimpleFormatter();  

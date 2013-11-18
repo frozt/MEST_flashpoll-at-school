@@ -33,6 +33,7 @@ $(document).ready(function() {
         	$('#poll_id').val(sessionStorage.poll_id);
         	$('#submit').trigger('click');
         }
+		
 	});
 	var pageNumber = 1, results = [];
 	function nextPage(isFinalPage) {
@@ -97,3 +98,55 @@ $(document).ready(function() {
 		if (value > 0)
 			return true;
 	}
+	
+	// Create array of all radio buttons
+	var radios = [];
+
+	$('[type=radio]').each(function () {
+	    var id = $(this).attr('id');
+	    var value = $(this).attr('value');
+	    var status = $(this).is(':checked');
+	    radios.push({
+	        'id': id,
+	            'value': value,
+	            'status': status
+	    });
+	});
+
+	// Read array - not that important
+	$.each(radios, function (i, v) {
+	    console.log('index:' + i + ' : ' + v.id + ':' + v.value + ':' + v.status);
+	});
+
+	// Magic here..
+
+	$('[type=radio]').on('click', function () {
+		alert("radio clicked");
+	    var clicked = $(this);
+	    var id = $(this).attr('id');
+	    var status = $(this).is(':checked');
+	    var result = $.grep(radios, function (e) {
+	        return e.id == id;
+	    });
+	    var oldstatus = result[0].status;
+	    if (!oldstatus) {
+	        //alert('true');
+	        clicked.prop('checked', true).checkboxradio('refresh');
+	    } else {
+	        //alert('false');
+	        clicked.prop('checked', false).checkboxradio('refresh');
+	    }
+	    // Re-fill array to update changes..
+	    radios = [];
+	    $('[type=radio]').each(function () {
+	        var id = $(this).attr('id');
+	        var value = $(this).attr('value');
+	        var status = $(this).is(':checked');
+	        radios.push({
+	            'id': id,
+	                'value': value,
+	                'status': status
+	        });
+	    });
+	});
+	

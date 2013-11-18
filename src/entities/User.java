@@ -24,7 +24,6 @@ public class User implements Serializable {
 	private String password;
 	private String gender;
 	private int age;
-	private String occupation;
 	@Version
 	private Timestamp create_date;
 
@@ -54,14 +53,6 @@ public class User implements Serializable {
 
 	public void setAge(int age) {
 		this.age = age;
-	}
-
-	public String getOccupation() {
-		return occupation;
-	}
-
-	public void setOccupation(String occupation) {
-		this.occupation = occupation;
 	}
 
 	public String getUsername() {
