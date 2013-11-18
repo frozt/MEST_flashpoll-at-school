@@ -35,12 +35,14 @@
         </div>
         <div data-role="content">
             <div data-role="fieldcontain">
-            <fieldset data-role="controlgroup" data-type="horizontal">
-			        <legend>Kön:</legend>
+            <fieldset data-role="controlgroup">
+			        <legend>Är du tjej eller kille?</legend>
 			        <input type="radio" name="gender" id="male" value="male">
-			        <label for="male">Man</label>
+			        <label for="male">Tjej</label>
 			        <input type="radio" name="gender" id="female" value="female">
-			        <label for="female">Kvinna</label>
+			        <label for="female">Kille</label>
+			        <input type="radio" name="gender" id="neutral" value="neutral">
+			        <label for="neutral">Neutral</label>
 	    	</fieldset>
 	    	<fieldset class="ui-grid-a">
 			    <div class="ui-block-a"></div>
@@ -55,7 +57,7 @@
         </div>
         <div data-role="content">
             <div data-role="fieldcontain">
-			    <label for="ageBox">Din ålder:</label>
+			    <label for="ageBox">Hur gammal är du?</label>
 	    		<input type="number" name="birthday" id="ageBox" required onchange="ageCheck();"/>
 	    	
 	    	<fieldset class="ui-grid-a">

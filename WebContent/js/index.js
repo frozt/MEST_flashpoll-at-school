@@ -57,20 +57,25 @@ $(document).ready(function() {
                 		//var password = $('#password').val();
                 		var password;
                 		var username = $('#username').val();
-                		$.get('UserServlet',{loginType:"username",userType:"user",username:username,password:password},function(responseText) { 
-	                        if(responseText === "login exist"){
-	                        	sessionStorage.username = username;
-	                       	   	window.location = 'poll.html';
-	                        }
-	                        else if(responseText === "login new") {
-	                        	sessionStorage.username = username;
-	                        	window.location = 'default.html';
-	                        }
-	                        else {
-                         	   alert("Fel användarnamn eller lösenord!");
-                         	   $('#password').val('');
-                            }
-                        });
+                		if(username) {
+	                		$.get('UserServlet',{loginType:"username",userType:"user",username:username,password:password},function(responseText) { 
+		                        if(responseText === "login exist"){
+		                        	sessionStorage.username = username;
+		                       	   	window.location = 'poll.html';
+		                        }
+		                        else if(responseText === "login new") {
+		                        	sessionStorage.username = username;
+		                        	window.location = 'default.html';
+		                        }
+		                        else {
+	                         	   alert("Fel användarnamn eller lösenord!");
+	                         	   $('#password').val('');
+	                            }
+	                        });
+                		}
+                		else
+                			alert("Ange en giltig användarnamn.");
+                		
                 	}
                 	
                 	

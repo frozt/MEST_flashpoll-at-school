@@ -89,7 +89,11 @@ public class UserServlet extends HttpServlet {
 	    else {
 	    	String username = request.getParameter("username");
 			String gender = request.getParameter("gender");
-			int age = Integer.parseInt(request.getParameter("age"));
+			int age = 0;
+			if(!request.getParameter("age").isEmpty()) {
+				age = Integer.parseInt(request.getParameter("age"));
+			}
+
 			if(main.insertUserWithUsername(em, username, gender, age))
 				response.getWriter().write("success");
 			else

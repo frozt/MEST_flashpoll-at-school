@@ -11,7 +11,7 @@ public class PageCreation {
         String page="";
         for(Question q : questions)
             page += question(q,questions.size(),title);
-        page += finalPage();
+        page += finalPage(title);
         return page;
     }
 
@@ -138,13 +138,13 @@ public class PageCreation {
 	        	
 	        return buttons;
 	    }
-	    private String finalPage ()
+	    private String finalPage (String title)
 	    {
-	        String content=" <div data-role=\"page\" id=\"final\"><div data-role=\"header\"><h1>MEST</h1></div> "
+	        String content=" <div data-role=\"page\" id=\"final\"><div data-role=\"header\"><h1>"+title+"</h1></div> "
 	                +" <div data-role=\"content\"><h1>"+language.getMessage("Thanks")+"</h1>"+language.getMessage("End")
 	                + " <br>"+language.getMessage("Submitted")+"<div id=\"feedback\"></div>"
 	                +"<fieldset class=\"ui-grid-a\"><div class=\"ui-block-a\"><input type=\"button\" value=\""+language.getMessage("Homepage")+"\" data-theme=\"b\" "
-	                +" onclick=\"window.location = 'poll.html'; \"></div></fieldset></div></div>";
+	                +" onclick=\"window.location = 'index.html'; \"></div></fieldset></div></div>";
 	        return content;
 	    }
 }
