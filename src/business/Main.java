@@ -341,6 +341,12 @@ public class Main {
 		query.setParameter("status", true);
 		return query.getResultList();
 	}
+	public List<entities.Poll> getDeactivePolls (EntityManager em)
+	{
+		Query query = em.createQuery("select p from Poll p where p.status = :status order by p.id desc");
+		query.setParameter("status", false);
+		return query.getResultList();
+	}
 	public List<entities.Answers> getPollAnswers (EntityManager em, Long pollId) 
 	{
 		Query query = em.createQuery("select a from Answers a where a.poll_id = :pollId");

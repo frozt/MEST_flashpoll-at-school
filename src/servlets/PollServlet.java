@@ -55,6 +55,17 @@ public class PollServlet extends HttpServlet {
 	    	response.getWriter().write(resp);
 	    	System.out.println("Response is :" +resp);
 	    	break;
+	    case "deactivePolls":
+	    	PollLogger.log("Deactive Poll servlet started");
+	    	List<entities.Poll> deactivePolls = main.getDeactivePolls(em);
+	    	resp = "" ;
+	    	for(int i =0; i < deactivePolls.size() -1;i++) {
+	    		resp += deactivePolls.get(i).getId().toString() +" - "+ deactivePolls.get(i).getTitle()+ ";"; 
+	    	}
+	    	resp += deactivePolls.get(deactivePolls.size() -1).getId().toString() +" - "+ deactivePolls.get(deactivePolls.size() -1).getTitle();
+	    	response.getWriter().write(resp);
+	    	System.out.println("Response is :" +resp);
+	    	break;
 	    case "createPoll":
 	    	PollLogger.log("Create poll started");
 			business.PageCreation pc = new business.PageCreation();

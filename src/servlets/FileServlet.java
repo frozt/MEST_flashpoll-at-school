@@ -49,8 +49,8 @@ public class FileServlet extends HttpServlet {
 	    Main main = new Main();
 
 	    response.setContentType("text/html");  
-	    response.setCharacterEncoding("UTF-8");
-	    Long poll_id = Long.parseLong(request.getParameter("pollId"));
+	    response.setCharacterEncoding("UTF-8"); 
+	    Long poll_id = Long.parseLong(request.getParameter("pollId").split("-")[0].trim());
 	    List<entities.Answers> answers = main.getPollAnswers(em, poll_id);
 	    String results = "";
 	    for(int i =0; i < answers.size() -1;i++) {

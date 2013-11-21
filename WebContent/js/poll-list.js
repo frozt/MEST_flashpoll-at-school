@@ -16,6 +16,21 @@
         				$("#pollsList").append("<input type=\"radio\" name=\"polls\" id=\"" + responseText + "\" value=\""+responseText+"\"/>"+responseText+"<br>");
         		}
         	});
+        	var deactivePolls = "deactivePolls" ;
+        	$.get('PollServlet',{requestType:deactivePolls},function(responseText) {
+        		if(responseText != null) {
+        			if(responseText.indexOf(";") != -1) {
+        				var polls = responseText.split(";");
+        				$("#deactive-pollsList").html("");
+        				for(var i=0; i<polls.length; i++) {
+        					$("#deactive-pollsList").append("<input type=\"radio\" name=\"polls\" id=\"" + polls[i] + "\" value=\""+polls[i]+"\"/>"+polls[i]+"<br>");
+        				}
+                        
+        			}
+        			else
+        				$("#deactive-pollsList").append("<input type=\"radio\" name=\"polls\" id=\"" + responseText + "\" value=\""+responseText+"\"/>"+responseText+"<br>");
+        		}
+        	});
         });
         function exportFile() {
         	var FileId = $('input[name="polls"]:checked').val();
