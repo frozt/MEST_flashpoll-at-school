@@ -193,8 +193,56 @@ public class Main {
 			PollLogger.log("insertAnswers exception "+e.toString());
 			return false;
 		}
+		if(insertAnswers20(em, user_email, poll_id, answers))
+			System.out.println("Inserted");
+		else
+			System.out.println("Failed");
 		return true;
 	}
+	public boolean insertAnswers20(EntityManager em, String user_email, Long poll_id, String answers) {
+		int counter=0;
+		entities.Answers20 answ = new entities.Answers20();
+		answ.setPoll_id(poll_id);
+		answ.setUser_email(user_email);
+
+		ArrayList<String> answer_part = null;
+		for(int i=0;i<answers.split(";").length;i++) {
+			if(answers.split(";")[i].contains("question")) {
+				System.out.println("question bolumunde");
+				if(counter != 0) {
+					answ.setAnswer(answer_part, counter);
+					System.out.println(answer_part.toString() +" "+counter);
+					answer_part=new ArrayList<String>();
+					counter++;
+				}
+				else {
+					answer_part=new ArrayList<String>();
+					counter++;
+				}
+			}
+			else {
+				answer_part.add(answers.split(";")[i]);
+				if (i==answers.split(";").length -1) {
+					answ.setAnswer(answer_part, counter);
+					System.out.println(answer_part.toString() +" "+counter);
+				}
+			}
+				
+		}
+		System.out.println("cevaplar listelenecek");
+		for(int i=0; i<7;i++)
+			System.out.println(answ.getAnswer(i+1));
+		em.getTransaction().begin();
+		try {
+			em.persist(answ);
+			em.getTransaction().commit();
+		}catch (Exception e){
+			PollLogger.log("insertAnswers exception "+e.toString());
+			return false;
+		}
+		return true;
+	}
+
 	public long insertPoll(EntityManager em, String pollXml) throws URISyntaxException
 	{
 		PollLogger.log("insertPoll started");

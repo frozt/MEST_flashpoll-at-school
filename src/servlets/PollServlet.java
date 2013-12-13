@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,8 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.*;
 
+import entities.Answers;
 import business.Main;
 import business.PollLogger;
+import business.ResultsPageCreation;
 import business.UserController;
 import business.UserFeedback;
 
@@ -67,9 +70,11 @@ public class PollServlet extends HttpServlet {
 	    	System.out.println("Response is :" +resp);
 	    	break;
 	    case "createPoll":
+	    	
 	    	PollLogger.log("Create poll started");
 			business.PageCreation pc = new business.PageCreation();
 		    long poll_id =Long.parseLong(request.getParameter("poll"));
+	    	
 		    String user_email = request.getParameter("email");
 		    
 		    UserController userCont = new UserController();
@@ -104,9 +109,30 @@ public class PollServlet extends HttpServlet {
 		    poll_id = Long.parseLong(request.getParameter("pollId").toString().split("-")[0].trim());
 		    main.deletePoll(em, poll_id);
 	    	break;
+	    case "transferPoll":
+	    	System.out.println("Transfer pll servlet started");
+	    	poll_id = Long.parseLong(request.getParameter("pollId").toString().split("-")[0].trim());
+	    	Query query = em.createQuery("select a from Answers a where a.poll_id = :poll_id");
+			query.setParameter("poll_id", poll_id);
+			for(int i=0;i<query.getResultList().size();i++) {
+				
+				entities.Answers ans = (Answers) query.getResultList().get(i);
+				System.out.println("Loop started" + ans.getId());
+				main.insertAnswers20(em, ans.getUser_email() , poll_id, ans.getAnswers());
+			}
+	    	
+	    	break;
+	    case "statistics":
+	    	System.out.println("Statistics servlet started");
+	    	poll_id = Long.parseLong(request.getParameter("pollId").toString().split("-")[0].trim());
+	    	ResultsPageCreation rpc = new ResultsPageCreation();
+	    	response.getWriter().write(rpc.showAllStatistics(em, poll_id));
+	    	break;
 	    	default :
 	    		System.out.println("Unknown request type");
 	    		break;
+	    	
+	    		
 	    }
 	    
 	    em.close();

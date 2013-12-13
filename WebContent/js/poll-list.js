@@ -41,6 +41,12 @@
         		saveAs(blob,"Poll"+FileId+" results.txt");
         	});
         }
+        function transferPoll() {
+        	var FileId = $('input[name="polls"]:checked').val();
+        	$.get('PollServlet',{requestType:"transferPoll",pollId:FileId},function(responseText) {
+        		location.reload();
+        	});
+        }
         function logout () {
   			sessionStorage.username = "";
   			sessionStorage.loggedIn = false;
