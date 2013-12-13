@@ -59,12 +59,18 @@ public class ResultsPageCreation {
 			}
 			
 		}
-		System.out.println("sonuclar gosterilecektir");
+		// results will be listed with this string
+		int questionNo = -1;
 		for(resultCounter r:rc_list){
+			if(questionNo != r.questionNo)
+			{
+				questionNo = r.questionNo;
+				page += "<p><b>Question " + questionNo + "</b><br><hr>";
+			}
 			if(r.total == -1)
-				page += r.questionNo + " " +r.optionName +" "+ r.count +"<br>";
+				page += r.optionName +"<i>"+ r.count +"</i><br>";
 			else
-				page += r.questionNo+ " " +(double)r.total/answers.size()+"<br>";
+				page += "Average <i>" +(double)r.total/answers.size()+"</i><br>";
 		}
 		
 		return page;
