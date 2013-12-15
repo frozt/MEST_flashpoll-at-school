@@ -25,6 +25,7 @@ public class UserFeedback {
 				break;
 			}
 		}
+		feedback += "<p><a href=\"statistics.html?id="+ poll_id + "\" target=”_blank”>Klicka för statistik</a></p>";
 		return feedback;
 	}
 

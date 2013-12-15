@@ -1,5 +1,6 @@
 package business;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class ResultsPageCreation {
 		answers = getPollData(em, poll_id);
 		class resultCounter {
 			int questionNo;
+			String questionText;
 			String optionName;
 			int total=-1;
 			int count;
@@ -30,15 +32,20 @@ public class ResultsPageCreation {
 				for(String opt:q.getOptions()){
 					resultCounter rc = new resultCounter();
 					rc.questionNo = q.getNumber();
+					rc.questionText = q.getText();
 					rc.optionName = opt;
 					rc_list.add(rc);
 				}
 				for(Answers20 answer:answers){
-					for(String ans:answer.getAnswer(q.getNumber())) {
-						for(resultCounter r:rc_list) {
-							if(r.questionNo == q.getNumber())
-								if(r.optionName.equals(ans))
-									r.count++;
+					if(answer.getAnswer(q.getNumber()) != null) {
+						for(int i=0; i<answer.getAnswer(q.getNumber()).size(); i++) {
+							String ans=answer.getAnswer(q.getNumber()).get(i);
+							for(resultCounter r:rc_list) {
+								if(r.questionNo == q.getNumber())
+									if(r.optionName.equals(answer.getAnswer(q.getNumber()).get(i)))
+										r.count++;
+							}
+								
 						}
 					}
 				}
@@ -46,13 +53,15 @@ public class ResultsPageCreation {
 			else if (q.getType().equals("slide")) {
 				resultCounter rc = new resultCounter();
 				rc.questionNo = q.getNumber();
+				rc.questionText = q.getText();
 				rc.total = 0;
 				rc_list.add(rc);
 				for(Answers20 answer:answers){
 					for(String ans:answer.getAnswer(q.getNumber())) {
 						for(resultCounter r:rc_list) {
 							if(r.questionNo == q.getNumber())
-								r.total += Integer.parseInt(ans);
+								if(!ans.equals(""))
+									r.total += Integer.parseInt(ans);
 						}
 					}
 				}
@@ -61,16 +70,17 @@ public class ResultsPageCreation {
 		}
 		// results will be listed with this string
 		int questionNo = -1;
+		DecimalFormat df = new DecimalFormat("#.##");
 		for(resultCounter r:rc_list){
 			if(questionNo != r.questionNo)
 			{
 				questionNo = r.questionNo;
-				page += "<p><b>Question " + questionNo + "</b><br><hr>";
+				page += "<p><b>Question " + questionNo +" - "+ r.questionText +"</b><br><hr>";
 			}
 			if(r.total == -1)
 				page += r.optionName +"<i>"+ r.count +"</i><br>";
 			else
-				page += "Average <i>" +(double)r.total/answers.size()+"</i><br>";
+				page += "Average <i>" +Double.valueOf(df.format((double)r.total/answers.size()))+"</i><br>";
 		}
 		
 		return page;
